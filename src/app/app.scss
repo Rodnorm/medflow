@@ -1,0 +1,16 @@
+.app-header {
+    mat-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.app-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.app-main {
+    padding: 16px;
+}
