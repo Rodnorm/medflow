@@ -8,7 +8,7 @@ test.describe('MedFlow — Operational Dashboard Main Journey', () => {
     await expect(page).toHaveURL(/.*overview/);
 
     await expect(page.locator('.overview-title')).toContainText('Operations Overview');
-    await expect(page.locator('.demo-badge')).toContainText('DEMO — SYNTHETIC DATA');
+    await expect(page.locator('.demo-badge')).toContainText('SYNTHETIC DATA');
 
     const metricCards = page.locator('app-metric-card');
     await expect(metricCards).toHaveCount(5);

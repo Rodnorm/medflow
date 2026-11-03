@@ -1,15 +1,38 @@
 <header class="app-header">
-  <mat-toolbar color="primary">
-    <span class="app-title">{{ title() }}</span>
+  <mat-toolbar>
+    <div class="brand-group">
+      <span class="material-symbols-outlined brand-icon">vital_signs</span>
+      <span class="brand-title">{{ title() }}</span>
+      <span class="env-pill">DEMO &bull; CLINICAL OPS</span>
+    </div>
 
     <nav aria-label="Main navigation" class="app-nav">
-      <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+      <a
+        mat-button
+        routerLink="/"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link"
+      >
+        <span class="material-symbols-outlined nav-icon">dashboard</span>
         Overview
       </a>
-      <a mat-button routerLink="/procedures" routerLinkActive="active-link">
+      <a
+        mat-button
+        routerLink="/procedures"
+        routerLinkActive="active-link"
+        class="nav-link"
+      >
+        <span class="material-symbols-outlined nav-icon">local_hospital</span>
         Procedures
       </a>
-      <a mat-button routerLink="/instruments" routerLinkActive="active-link">
+      <a
+        mat-button
+        routerLink="/instruments"
+        routerLinkActive="active-link"
+        class="nav-link"
+      >
+        <span class="material-symbols-outlined nav-icon">precision_manufacturing</span>
         Instruments
       </a>
     </nav>

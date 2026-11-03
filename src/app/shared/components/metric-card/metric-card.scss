@@ -3,51 +3,82 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid var(--med-border-card);
+  background: #ffffff;
+  box-shadow: var(--med-shadow-card);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
-  &--clickable:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--mat-sys-level2, 0 3px 6px rgba(0, 0, 0, 0.15));
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--med-shadow-hover);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #0284c7 0%, #38bdf8 100%);
+    opacity: 0.8;
   }
 }
 
 .metric-title {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--med-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.06em;
+  margin: 0;
 }
 
 .metric-content {
-  padding-top: 12px;
+  padding-top: 14px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
 .metric-value {
-  font-size: 2.25rem;
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--mat-sys-primary);
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--med-text-primary);
+  letter-spacing: -0.03em;
 }
 
 .metric-hint {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   font-size: 0.8125rem;
-  color: var(--mat-sys-outline);
+  font-weight: 500;
+  color: var(--med-text-muted);
 }
 
 .metric-link {
   margin-top: auto;
-  padding-top: 12px;
+  padding-top: 16px;
   font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--mat-sys-primary);
+  font-weight: 600;
+  color: var(--med-primary);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
   &:hover {
+    color: var(--med-primary-dark);
     text-decoration: underline;
   }
 }
@@ -56,6 +87,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
+  min-height: 58px;
 }
-

@@ -1,53 +1,62 @@
 .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+  line-height: 1;
+
+  &::before {
+    content: '';
     display: inline-block;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
 
-    &[data-status='planned'] {
-        background-color: #e0f2fe;
-        color: #0369a1;
-    }
+  &[data-status='available'],
+  &[data-status='completed'] {
+    background-color: var(--med-success-bg);
+    color: var(--med-success);
+    border-color: rgba(34, 197, 94, 0.3);
+    &::before { background-color: var(--med-success); }
+  }
 
-    &[data-status='in-progress'] {
-        background-color: #fef3c7;
-        color: #b45309;
-    }
+  &[data-status='planned'],
+  &[data-status='reserved'] {
+    background-color: var(--med-primary-subtle);
+    color: var(--med-primary-dark);
+    border-color: rgba(2, 132, 199, 0.3);
+    &::before { background-color: var(--med-primary); }
+  }
 
-    &[data-status='completed'] {
-        background-color: #dcfce7;
-        color: #15803d;
+  &[data-status='in-progress'],
+  &[data-status='in-use'] {
+    background-color: var(--med-warning-bg);
+    color: var(--med-warning);
+    border-color: rgba(245, 158, 11, 0.3);
+    &::before {
+      background-color: var(--med-warning);
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
     }
+  }
 
-    &[data-status='cancelled'] {
-        background-color: #fee2e2;
-        color: #b91c1c;
-    }
+  &[data-status='cleaning'] {
+    background-color: var(--med-purple-bg);
+    color: var(--med-purple);
+    border-color: rgba(168, 85, 247, 0.3);
+    &::before { background-color: var(--med-purple); }
+  }
 
-    &[data-status='available'] {
-        background-color: #dcfce7;
-        color: #15803d;
-    }
-
-    &[data-status='reserved'] {
-        background-color: #e0f2fe;
-        color: #0369a1;
-    }
-
-    &[data-status='in-use'] {
-        background-color: #fef3c7;
-        color: #b45309;
-    }
-
-    &[data-status='cleaning'] {
-        background-color: #f3e8ff;
-        color: #7e22ce;
-    }
-
-    &[data-status='maintenance'] {
-        background-color: #fee2e2;
-        color: #b91c1c;
-    }
+  &[data-status='cancelled'],
+  &[data-status='maintenance'] {
+    background-color: var(--med-danger-bg);
+    color: var(--med-danger);
+    border-color: rgba(239, 68, 68, 0.3);
+    &::before { background-color: var(--med-danger); }
+  }
 }

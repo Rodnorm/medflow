@@ -5,6 +5,7 @@ import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/m
 import { MatButton } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProcedureService } from '../../core/services/procedure/procedure.service';
 import { InstrumentSetService } from '../../core/services/instrument-set/instrument-set.service';
 import { Procedure } from '../../core/models/procedure/procedure.model';
@@ -15,17 +16,17 @@ import { StatusBadge } from '../../shared/components/status-badge/status-badge';
 @Component({
   selector: 'app-overview',
   imports: [
-    MatCard,
-    DatePipe,
-    MatButton,
     RouterLink,
+    DatePipe,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    MatButton,
+    MatTableModule,
+    MatProgressSpinner,
+    MatProgressBarModule,
     MetricCard,
     StatusBadge,
-    MatCardTitle,
-    MatCardHeader,
-    MatTableModule,
-    MatCardContent,
-    MatProgressSpinner,
   ],
   templateUrl: './overview.html',
   styleUrl: './overview.scss',
@@ -42,15 +43,31 @@ export class OverviewComponent {
   readonly displayedColumns: string[] = ['code', 'title', 'scheduledDate', 'operatingRoom', 'status'];
 
   readonly totalProcedures = computed(() => this.procedures().length);
-
   readonly plannedProcedures = computed(
     () => this.procedures().filter((p) => p.status === 'planned').length
   );
   readonly inProgressProcedures = computed(
     () => this.procedures().filter((p) => p.status === 'in-progress').length
   );
+  readonly completedProcedures = computed(
+    () => this.procedures().filter((p) => p.status === 'completed').length
+  );
+  readonly cancelledProcedures = computed(
+    () => this.procedures().filter((p) => p.status === 'cancelled').length
+  );
+
+  readonly totalInstruments = computed(() => this.instrumentSets().length);
   readonly availableSets = computed(
     () => this.instrumentSets().filter((i) => i.status === 'available').length
+  );
+  readonly reservedSets = computed(
+    () => this.instrumentSets().filter((i) => i.status === 'reserved').length
+  );
+  readonly inUseSets = computed(
+    () => this.instrumentSets().filter((i) => i.status === 'in-use').length
+  );
+  readonly cleaningSets = computed(
+    () => this.instrumentSets().filter((i) => i.status === 'cleaning').length
   );
   readonly maintenanceSets = computed(
     () => this.instrumentSets().filter((i) => i.status === 'maintenance').length
@@ -89,5 +106,9 @@ export class OverviewComponent {
         this.loading.set(false);
       },
     });
+  }
+
+  getPercentage(count: number, total: number): number {
+    return total > 0 ? Math.round((count / total) * 100) : 0;
   }
 }

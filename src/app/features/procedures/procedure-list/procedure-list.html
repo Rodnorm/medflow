@@ -34,7 +34,7 @@
     </div>
   }
 
-  <div class="table-container mat-elevation-z2">
+  <div class="table-container">
     @if (loading()) {
       <div class="loading-shade">
         <mat-progress-spinner diameter="44" mode="indeterminate" />
@@ -52,17 +52,21 @@
 
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef>Procedure Title</th>
-          <td mat-cell *matCellDef="let row">{{ row.title }}</td>
+          <td mat-cell *matCellDef="let row" style="font-weight: 500;">{{ row.title }}</td>
         </ng-container>
 
         <ng-container matColumnDef="scheduledDate">
           <th mat-header-cell *matHeaderCellDef>Scheduled Time</th>
-          <td mat-cell *matCellDef="let row">{{ row.scheduledDate | date: 'medium' }}</td>
+          <td mat-cell *matCellDef="let row" style="color: var(--med-text-secondary);">
+            {{ row.scheduledDate | date: 'medium' }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="operatingRoom">
-          <th mat-header-cell *matHeaderCellDef>OR</th>
-          <td mat-cell *matCellDef="let row">{{ row.operatingRoom }}</td>
+          <th mat-header-cell *matHeaderCellDef>Theater</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="theater-badge">{{ row.operatingRoom }}</span>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="instrumentSetId">
@@ -86,7 +90,9 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let row">
-            <button mat-button color="primary" (click)="openManageDialog(row)">Manage</button>
+            <button mat-stroked-button color="primary" class="manage-btn" (click)="openManageDialog(row)">
+              Manage
+            </button>
           </td>
         </ng-container>
 
