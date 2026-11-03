@@ -48,3 +48,9 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+AGENTS.MD
+docs/
+
+AGENTS.md
+docs
