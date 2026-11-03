@@ -1,0 +1,65 @@
+<h2 mat-dialog-title>
+  Manage Procedure: {{ procedure().code }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  @if (error()) {
+    <div class="error-banner" role="alert">
+      {{ error() }}
+    </div>
+  }
+
+  <div class="details-grid">
+    <div><strong>Title:</strong> {{ procedure().title }}</div>
+    <div><strong>Operating Room:</strong> {{ procedure().operatingRoom }}</div>
+    <div><strong>Scheduled:</strong> {{ procedure().scheduledDate | date: 'medium' }}</div>
+    <div>
+      <strong>Current Status:</strong>
+      <app-status-badge [status]="procedure().status" />
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="actions-section">
+    <h3>Available Workflow Actions</h3>
+
+    @if (loading()) {
+      <div class="spinner-container">
+        <mat-progress-spinner diameter="32" mode="indeterminate" />
+      </div>
+    } @else if (showCancelConfirm()) {
+      <div class="confirm-box">
+        <p>Are you sure you want to cancel this procedure? This action cannot be undone.</p>
+        <div class="confirm-buttons">
+          <button mat-flat-button color="warn" (click)="confirmCancellation()">
+            Yes, Cancel Procedure
+          </button>
+          <button mat-button (click)="showCancelConfirm.set(false)">
+            Back
+          </button>
+        </div>
+      </div>
+    } @else if (availableTransitions.length === 0) {
+      <p class="final-state">This procedure is in a final state and cannot be transitioned further.</p>
+    } @else {
+      <div class="transition-buttons">
+        @for (status of availableTransitions; track status) {
+          @if (status === 'cancelled') {
+            <button mat-stroked-button color="warn" (click)="onSelectTransition(status)">
+              Cancel Procedure
+            </button>
+          } @else {
+            <button mat-flat-button color="primary" (click)="onSelectTransition(status)">
+              Advance to {{ status }}
+            </button>
+          }
+        }
+      </div>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Close</button>
+</mat-dialog-actions>
