@@ -1,0 +1,61 @@
+.metric-card {
+  min-width: 180px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &--clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mat-sys-level2, 0 3px 6px rgba(0, 0, 0, 0.15));
+  }
+}
+
+.metric-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-content {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.metric-value {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--mat-sys-primary);
+}
+
+.metric-hint {
+  margin: 6px 0 0;
+  font-size: 0.8125rem;
+  color: var(--mat-sys-outline);
+}
+
+.metric-link {
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.metric-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+}
+
