@@ -1,0 +1,72 @@
+@if (procedure(); as proc) {
+  <div class="detail-container">
+    <!-- Breadcrumb & Header -->
+    <div class="breadcrumb">
+      <a routerLink="/procedures" class="back-link">
+        <mat-icon>arrow_back</mat-icon> Back to Worklist
+      </a>
+    </div>
+    <div class="header-card">
+      <div class="header-main">
+        <div class="title-group">
+          <span class="code-badge">{{ proc.code }}</span>
+          <h1 class="title">{{ proc.title }}</h1>
+        </div>
+        <app-status-badge [status]="proc.status" />
+      </div>
+      <div class="meta-row">
+        <div><strong>Theater:</strong> {{ proc.operatingRoom }}</div>
+        <div><strong>Scheduled:</strong> {{ proc.scheduledDate | date: 'medium' }}</div>
+        <div><strong>Duration:</strong> {{ proc.durationMinutes || 90 }} min</div>
+      </div>
+    </div>
+    <!-- Abas Analíticas (Resumo, Instrumentos, Auditoria) -->
+    <mat-tab-group class="detail-tabs">
+      <!-- Aba 1: Resumo e Ações Rápidas -->
+      <mat-tab label="Workflow & Actions">
+        <div class="tab-content">
+          <h3>Available Status Transitions</h3>
+          @if (availableTransitions().length === 0) {
+            <p class="text-muted">
+              This procedure is completed or cancelled and cannot be changed.
+            </p>
+          } @else {
+            <div class="actions-row">
+              @for (status of availableTransitions(); track status) {
+                <button
+                  mat-flat-button
+                  [color]="status === 'cancelled' ? 'warn' : 'primary'"
+                  (click)="updateStatus(proc.id, status)"
+                >
+                  Move to {{ status }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </mat-tab>
+      <!-- Aba 2: Instrumental Cirúrgico Alocado -->
+      <mat-tab label="Allocated Instruments">
+        <div class="tab-content">
+          @if (allocatedInstrument(); as set) {
+            <div class="instrument-card">
+              <h4>{{ set.name }} ({{ set.code }})</h4>
+              <p><strong>Current Location:</strong> {{ set.location }}</p>
+              <p>
+                <strong>Set Status:</strong> <span class="status-pill">{{ set.status }}</span>
+              </p>
+            </div>
+          } @else {
+            <p class="text-muted">No instrument set allocated to this surgical procedure.</p>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+} @else {
+  <div class="not-found">
+    <h2>Procedure Not Found</h2>
+    <p>The requested surgical procedure does not exist.</p>
+    <a mat-button routerLink="/procedures">Return to Worklist</a>
+  </div>
+}
