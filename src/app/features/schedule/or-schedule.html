@@ -1,0 +1,60 @@
+<div class="schedule-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Operating Room Schedule</h1>
+      <p class="page-subtitle">24-hour surgical theater timeline with live operational tracking.</p>
+    </div>
+    <div class="legend-pills">
+      <span class="pill planned">Planned</span>
+      <span class="pill in-progress">In Progress</span>
+      <span class="pill completed">Completed</span>
+      <span class="pill cancelled">Cancelled</span>
+    </div>
+  </div>
+  <!-- Grade da Linha do Tempo -->
+  <div class="timeline-container">
+    <!-- Eixo de Horas (00:00 às 23:00) -->
+    <div class="timeline-header">
+      <div class="room-column-header">Operating Theater</div>
+      <div class="hours-track">
+        @for (hour of hours; track hour) {
+          <div class="hour-marker">
+            <span>{{ hour }}:00</span>
+          </div>
+        }
+      </div>
+    </div>
+    <!-- Linhas das Salas Cirúrgicas (OR-1 a OR-6) -->
+    <div class="rooms-container">
+      <!-- Linha Vermelha de Tempo Atual ("Now Line") -->
+      <div class="now-line" [style.left.%]="nowPositionPercent()" title="Current Time Indicator">
+        <span class="now-badge">{{ currentTime() | date: 'HH:mm' }}</span>
+      </div>
+      @for (room of operatingRooms; track room) {
+        <div class="room-row">
+          <div class="room-label">
+            <span class="room-badge">{{ room }}</span>
+          </div>
+          <div class="room-track">
+            <!-- Blocos de Procedimentos alocados nesta sala (botão acessível para atender a11y) -->
+            @for (proc of getProceduresForRoom(room); track proc.id) {
+              <button
+                type="button"
+                class="schedule-block"
+                [ngClass]="proc.status"
+                [style.left.%]="getBlockPosition(proc).left"
+                [style.width.%]="getBlockPosition(proc).width"
+                (click)="openManageDialog(proc)"
+                [attr.aria-label]="proc.title + ' in ' + room"
+              >
+                <span class="block-code">{{ proc.code }}</span>
+                <span class="block-title">{{ proc.title }}</span>
+                <span class="block-time">{{ proc.scheduledDate | date: 'HH:mm' }}</span>
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
