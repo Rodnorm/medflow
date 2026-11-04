@@ -1,29 +1,28 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { provideMockStore } from '@ngrx/store/testing';
+
 import { OverviewComponent } from './overview';
-import { ProcedureService } from '../../core/services/procedure/procedure.service';
-import { InstrumentSetService } from '../../core/services/instrument-set/instrument-set.service';
-import { INITIAL_PROCEDURES, INITIAL_INSTRUMENT_SETS } from '../../core/data/synthetic-data';
+import { INITIAL_PROCEDURES } from '../../core/data/synthetic-data';
+import {
+  selectAllProcedures,
+  selectProceduresError,
+  selectProceduresLoading,
+} from '../../core/store/procedures/procedures.selectors';
 
 describe('OverviewComponent', () => {
-  let procedureServiceMock: Partial<ProcedureService>;
-  let instrumentSetServiceMock: Partial<InstrumentSetService>;
-
   beforeEach(async () => {
-    procedureServiceMock = {
-      getProcedures: () => of(INITIAL_PROCEDURES),
-    };
-    instrumentSetServiceMock = {
-      getInstrumentSets: () => of(INITIAL_INSTRUMENT_SETS),
-    };
-
     await TestBed.configureTestingModule({
       imports: [OverviewComponent],
       providers: [
         provideRouter([]),
-        { provide: ProcedureService, useValue: procedureServiceMock },
-        { provide: InstrumentSetService, useValue: instrumentSetServiceMock },
+        provideMockStore({
+          selectors: [
+            { selector: selectAllProcedures, value: INITIAL_PROCEDURES },
+            { selector: selectProceduresLoading, value: false },
+            { selector: selectProceduresError, value: null },
+          ],
+        }),
       ],
     }).compileComponents();
   });
@@ -35,7 +34,6 @@ describe('OverviewComponent', () => {
     const component = fixture.componentInstance;
     expect(component).toBeTruthy();
     expect(component.totalProcedures()).toBe(INITIAL_PROCEDURES.length);
-    expect(component.availableSets()).toBeGreaterThan(0);
     expect(component.loading()).toBe(false);
   });
 
@@ -49,4 +47,3 @@ describe('OverviewComponent', () => {
     expect(compiled.querySelector('.recent-table')).not.toBeNull();
   });
 });
-

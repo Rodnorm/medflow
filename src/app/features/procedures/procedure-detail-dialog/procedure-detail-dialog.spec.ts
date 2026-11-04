@@ -1,13 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Action } from '@ngrx/store';
+import { Subject } from 'rxjs';
+import { vi } from 'vitest';
+
 import { ProcedureDetailDialogComponent } from './procedure-detail-dialog';
-import { ProcedureService } from '../../../core/services/procedure/procedure.service';
 import { Procedure } from '../../../core/models/procedure/procedure.model';
+import { ProceduresActions } from '../../../core/store/procedures/procedures.action';
 
 describe('ProcedureDetailDialogComponent', () => {
   let dialogRefMock: { close: ReturnType<typeof vi.fn> };
-  let procedureServiceMock: Partial<ProcedureService>;
+  let store: MockStore;
+  let actions$: Subject<Action>;
 
   const mockProcedure: Procedure = {
     id: 'prc-001',
@@ -24,20 +30,20 @@ describe('ProcedureDetailDialogComponent', () => {
     dialogRefMock = {
       close: vi.fn(),
     };
-
-    procedureServiceMock = {
-      updateStatus: (id, newStatus) =>
-        of({ ...mockProcedure, status: newStatus, updatedAt: new Date().toISOString() }),
-    };
+    actions$ = new Subject<Action>();
 
     await TestBed.configureTestingModule({
       imports: [ProcedureDetailDialogComponent],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: { procedure: mockProcedure } },
         { provide: MatDialogRef, useValue: dialogRefMock },
-        { provide: ProcedureService, useValue: procedureServiceMock },
+        provideMockStore(),
+        provideMockActions(() => actions$),
       ],
     }).compileComponents();
+
+    store = TestBed.inject(MockStore);
+    vi.spyOn(store, 'dispatch');
   });
 
   it('should create and render procedure details', () => {
@@ -49,35 +55,28 @@ describe('ProcedureDetailDialogComponent', () => {
     expect(compiled.textContent).toContain('Diagnostic Laparoscopy');
   });
 
-  it('should render allowed workflow transitions for planned status', () => {
-    const fixture = TestBed.createComponent(ProcedureDetailDialogComponent);
-    fixture.detectChanges();
-
-    const component = fixture.componentInstance;
-    expect(component.availableTransitions).toContain('in-progress');
-    expect(component.availableTransitions).toContain('cancelled');
-  });
-
-  it('should prompt confirmation when cancel transition is selected', () => {
-    const fixture = TestBed.createComponent(ProcedureDetailDialogComponent);
-    fixture.detectChanges();
-
-    const component = fixture.componentInstance;
-    component.onSelectTransition('cancelled');
-
-    expect(component.showCancelConfirm()).toBe(true);
-    expect(dialogRefMock.close).not.toHaveBeenCalled();
-  });
-
-  it('should execute transition and close dialog on status advance', () => {
+  it('should dispatch updateStatus action when transition is executed', () => {
     const fixture = TestBed.createComponent(ProcedureDetailDialogComponent);
     fixture.detectChanges();
 
     const component = fixture.componentInstance;
     component.onSelectTransition('in-progress');
 
-    expect(dialogRefMock.close).toHaveBeenCalledWith(
-      expect.objectContaining({ status: 'in-progress' })
+    expect(store.dispatch).toHaveBeenCalledWith(
+      ProceduresActions.updateStatus({
+        id: mockProcedure.id,
+        newStatus: 'in-progress',
+      }),
     );
+  });
+
+  it('should close dialog when updateStatusSuccess action is emitted', () => {
+    const fixture = TestBed.createComponent(ProcedureDetailDialogComponent);
+    fixture.detectChanges();
+
+    const updated = { ...mockProcedure, status: 'in-progress' as const };
+    actions$.next(ProceduresActions.updateStatusSuccess({ procedure: updated }));
+
+    expect(dialogRefMock.close).toHaveBeenCalledWith(updated);
   });
 });

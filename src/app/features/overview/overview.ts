@@ -1,17 +1,23 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ProcedureService } from '../../core/services/procedure/procedure.service';
-import { InstrumentSetService } from '../../core/services/instrument-set/instrument-set.service';
-import { Procedure } from '../../core/models/procedure/procedure.model';
-import { InstrumentSet } from '../../core/models/instrument-set/instrument-set.model';
 import { MetricCard } from '../../shared/components/metric-card/metric-card';
 import { StatusBadge } from '../../shared/components/status-badge/status-badge';
+import { Store } from '@ngrx/store';
+import { InstrumentsStore } from '../../core/store/instruments/instruments.store';
+import {
+  selectAllProcedures,
+  selectProceduresError,
+  selectProceduresLoading,
+} from '../../core/store/procedures/procedures.selectors';
+import { ProceduresActions } from '../../core/store/procedures/procedures.action';
+import { DonutChartComponent, ChartSegment } from '../../shared/components/chart/donut-chart';
+import { ActivityStore } from '../../core/store/activity/activity.store';
 
 @Component({
   selector: 'app-overview',
@@ -27,51 +33,86 @@ import { StatusBadge } from '../../shared/components/status-badge/status-badge';
     MatProgressBarModule,
     MetricCard,
     StatusBadge,
+    DonutChartComponent,
   ],
   templateUrl: './overview.html',
   styleUrl: './overview.scss',
 })
 export class OverviewComponent {
-  private readonly procedureService = inject(ProcedureService);
-  private readonly instrumentSetService = inject(InstrumentSetService);
+  private readonly store = inject(Store);
+  private readonly instrumentStore = inject(InstrumentsStore);
+  readonly activityStore = inject(ActivityStore);
+  readonly recentActivities = this.activityStore.recentActivities;
 
-  readonly procedures = signal<readonly Procedure[]>([]);
-  readonly instrumentSets = signal<readonly InstrumentSet[]>([]);
-  readonly loading = signal<boolean>(true);
-  readonly error = signal<string | null>(null);
+  readonly procedures = this.store.selectSignal(selectAllProcedures);
+  readonly proceduresError = this.store.selectSignal(selectProceduresError);
+  readonly proceduresLoading = this.store.selectSignal(selectProceduresLoading);
 
-  readonly displayedColumns: string[] = ['code', 'title', 'scheduledDate', 'operatingRoom', 'status'];
+  readonly instrumentsError = this.instrumentStore.error;
+  readonly instrumentSets = this.instrumentStore.instruments;
+  readonly instrumentsLoading = this.instrumentStore.loading;
+
+  readonly error = computed(() => this.proceduresError() || this.instrumentsError());
+  readonly loading = computed(() => this.proceduresLoading() || this.instrumentsLoading());
+
+  readonly displayedColumns: string[] = [
+    'code',
+    'title',
+    'scheduledDate',
+    'operatingRoom',
+    'status',
+  ];
 
   readonly totalProcedures = computed(() => this.procedures().length);
   readonly plannedProcedures = computed(
-    () => this.procedures().filter((p) => p.status === 'planned').length
+    () => this.procedures().filter((p) => p.status === 'planned').length,
   );
   readonly inProgressProcedures = computed(
-    () => this.procedures().filter((p) => p.status === 'in-progress').length
+    () => this.procedures().filter((p) => p.status === 'in-progress').length,
   );
   readonly completedProcedures = computed(
-    () => this.procedures().filter((p) => p.status === 'completed').length
+    () => this.procedures().filter((p) => p.status === 'completed').length,
   );
   readonly cancelledProcedures = computed(
-    () => this.procedures().filter((p) => p.status === 'cancelled').length
+    () => this.procedures().filter((p) => p.status === 'cancelled').length,
   );
 
   readonly totalInstruments = computed(() => this.instrumentSets().length);
   readonly availableSets = computed(
-    () => this.instrumentSets().filter((i) => i.status === 'available').length
+    () => this.instrumentSets().filter((i) => i.status === 'available').length,
   );
   readonly reservedSets = computed(
-    () => this.instrumentSets().filter((i) => i.status === 'reserved').length
+    () => this.instrumentSets().filter((i) => i.status === 'reserved').length,
   );
   readonly inUseSets = computed(
-    () => this.instrumentSets().filter((i) => i.status === 'in-use').length
+    () => this.instrumentSets().filter((i) => i.status === 'in-use').length,
   );
   readonly cleaningSets = computed(
-    () => this.instrumentSets().filter((i) => i.status === 'cleaning').length
+    () => this.instrumentSets().filter((i) => i.status === 'cleaning').length,
   );
   readonly maintenanceSets = computed(
-    () => this.instrumentSets().filter((i) => i.status === 'maintenance').length
+    () => this.instrumentSets().filter((i) => i.status === 'maintenance').length,
   );
+
+  readonly procedureChartData = computed<readonly ChartSegment[]>(() => [
+    {
+      id: 'in-progress',
+      label: 'In Progress',
+      value: this.inProgressProcedures(),
+      color: '#eab308',
+    },
+    { id: 'planned', label: 'Planned', value: this.plannedProcedures(), color: '#0284c7' },
+    { id: 'cancelled', label: 'Cancelled', value: this.cancelledProcedures(), color: '#ef4444' },
+    { id: 'completed', label: 'Completed', value: this.completedProcedures(), color: '#10b981' },
+  ]);
+
+  readonly instrumentChartData = computed<readonly ChartSegment[]>(() => [
+    { id: 'available', label: 'Available', value: this.availableSets(), color: '#10b981' },
+    { id: 'reserved', label: 'Reserved', value: this.reservedSets(), color: '#6366f1' },
+    { id: 'in-use', label: 'In Use', value: this.inUseSets(), color: '#f59e0b' },
+    { id: 'cleaning', label: 'Cleaning', value: this.cleaningSets(), color: '#06b6d4' },
+    { id: 'maintenance', label: 'Maintenance', value: this.maintenanceSets(), color: '#ef4444' },
+  ]);
 
   readonly recentProcedures = computed(() => {
     return [...this.procedures()]
@@ -84,28 +125,8 @@ export class OverviewComponent {
   }
 
   loadData(): void {
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.procedureService.getProcedures().subscribe({
-      next: (procs) => {
-        this.procedures.set(procs);
-        this.instrumentSetService.getInstrumentSets().subscribe({
-          next: (sets) => {
-            this.instrumentSets.set(sets);
-            this.loading.set(false);
-          },
-          error: (err: Error) => {
-            this.error.set(err.message ?? 'Failed to load instrument sets');
-            this.loading.set(false);
-          },
-        });
-      },
-      error: (err: Error) => {
-        this.error.set(err.message ?? 'Failed to load procedures');
-        this.loading.set(false);
-      },
-    });
+    this.store.dispatch(ProceduresActions.loadProcedures());
+    this.instrumentStore.loadInstruments();
   }
 
   getPercentage(count: number, total: number): number {
