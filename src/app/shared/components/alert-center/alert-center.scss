@@ -1,0 +1,76 @@
+.alerts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--med-border-subtle);
+  font-weight: 700;
+  color: var(--med-text-primary);
+}
+
+.count-pill {
+  font-size: 0.6875rem;
+  background: var(--med-danger-bg);
+  color: var(--med-danger);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.empty-alerts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  color: var(--med-success);
+  font-size: 0.875rem;
+}
+
+.ok-icon {
+  color: var(--med-success);
+}
+
+.alerts-list {
+  max-height: 360px;
+  overflow-y: auto;
+  width: 340px;
+}
+
+.alert-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--med-border-subtle);
+  transition: background-color 0.15s ease-in-out;
+
+  &:hover {
+    background: var(--med-surface-elevated);
+  }
+}
+
+.alert-item.critical .alert-icon {
+  color: #ef4444;
+}
+
+.alert-item:not(.critical) .alert-icon {
+  color: #f59e0b;
+}
+
+.alert-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.alert-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--med-text-primary);
+}
+
+.alert-message {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--med-text-secondary);
+  line-height: 1.3;
+}
