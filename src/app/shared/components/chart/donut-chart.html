@@ -1,0 +1,59 @@
+<div class="donut-container" role="region" [attr.aria-label]="title()">
+  <div class="svg-wrapper">
+    <svg viewBox="0 0 100 100" class="donut-svg" aria-hidden="true">
+      <g class="donut-segments">
+        @for (slice of slices(); track slice.id) {
+          <circle
+            cx="50"
+            cy="50"
+            r="40"
+            fill="transparent"
+            [attr.stroke]="slice.color"
+            stroke-width="14"
+            [attr.stroke-dasharray]="slice.dashArray"
+            [attr.stroke-dashoffset]="slice.dashOffset"
+            class="donut-segment"
+            [class.highlighted]="activeId() === slice.id"
+            (click)="selectSegment(slice.id)"
+          />
+        }
+      </g>
+
+      <text x="50" y="48" class="center-total" text-anchor="middle">{{ total() }}</text>
+      <text x="50" y="61" class="center-label" text-anchor="middle">Total</text>
+    </svg>
+  </div>
+  <div class="legend-container">
+    @for (item of data(); track item.id) {
+      <button
+        type="button"
+        class="legend-item"
+        [class.active]="activeId() === item.id"
+        (click)="selectSegment(item.id)"
+        [attr.aria-pressed]="activeId() === item.id"
+      >
+        <span class="color-dot" [style.background-color]="item.color"></span>
+        <span class="label">{{ item.label }}</span>
+        <span class="value">{{ item.value }} ({{ getPercentage(item.value) }}%)</span>
+      </button>
+    }
+  </div>
+  <table class="sr-only" [attr.aria-label]="title() + ' data table'">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Quantity</th>
+        <th>Percentage</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of data(); track item.id) {
+        <tr>
+          <td>{{ item.label }}</td>
+          <td>{{ item.value }}</td>
+          <td>{{ getPercentage(item.value) }}%</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

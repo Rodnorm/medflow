@@ -110,7 +110,7 @@
     .bar-track {
       height: 10px;
       border-radius: 9999px;
-      background: #f1f5f9;
+      background: var(--med-surface-elevated);
       overflow: hidden;
     }
 
@@ -175,7 +175,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   font-weight: 600;
-  background: #f1f5f9;
+  background: var(--med-surface-elevated);
   padding: 3px 8px;
   border-radius: 6px;
   color: var(--med-text-secondary);
