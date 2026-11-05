@@ -1,6 +1,8 @@
 # MedFlow — Surgical Workflow & Clinical Operations Dashboard
 
-MedFlow is an enterprise-grade operational healthcare platform built with **Angular 22**, combining **Angular Signals**, **NgRx Global Store** (with `@ngrx/entity`), and **NgRx SignalStore**. The system coordinates surgical procedure scheduling, operating room allocations, surgical instrument sterilization lifecycles, and real-time operational conflict detection.
+MedFlow is an operational healthcare demo built with **Angular 22**, combining **Angular Signals**, **NgRx Global Store** (with `@ngrx/entity`), and **NgRx SignalStore**. The system coordinates surgical procedure scheduling, operating room allocations, surgical instrument sterilization lifecycles, and real-time operational conflict detection.
+
+All data is synthetic and stored in memory; changes reset on page reload. Backend persistence and CI/CD remain planned enhancements.
 
 ---
 
@@ -12,14 +14,14 @@ MedFlow is an enterprise-grade operational healthcare platform built with **Angu
 - **Recent Procedures Table:** Fast operational listing with dynamic statuses and deep links to detail pages.
 
 ### 2. Advanced Surgical Worklist
-- **Real-Time Filtering & Debounced Search:** Text search (code and title) with a 300ms debounce and status filter, bi-directionally synchronized via URL Query Parameters.
+- **Real-Time Filtering & Debounced Search:** Text search (code and title) with a 300ms debounce and status filter, initialized from URL query parameters, with filter changes written back to the URL.
 - **Sorting & Pagination:** Built with `MatSort` and `MatPaginator` operating over `@ngrx/entity` managed collections.
 - **Data Export:** Instant export of filtered worklist entries to `.csv`.
-- **State Transition Workflow:** Secure modal dialog (`MatDialog`) handling strict status transitions (`planned` → `in-progress` → `completed` or `cancelled`) with destructive action confirmation.
+- **State Transition Workflow:** Modal dialog (`MatDialog`) handling strict status transitions (`planned` → `in-progress` → `completed`, or `planned` → `cancelled`) with destructive action confirmation.
 
 ### 3. Surgical Instrument Tracking
-- **Lifecycle Tracking:** Granular status transitions (`available` ⇄ `reserved` ⇄ `in-use` → `cleaning` → `available` / `maintenance`) and physical bay location tracking.
-- **Feature State Architecture:** Feature-scoped state managed via `@ngrx/signals` (`InstrumentsStore`) with search, filter, and reactive updates.
+- **Lifecycle Tracking:** Granular status transitions (`available` ⇄ `reserved`, `reserved` → `in-use` → `cleaning` → `available`, and `available` ⇄ `maintenance`) and display of each set’s location.
+- **Feature State Architecture:** Dedicated instrument state managed via `@ngrx/signals` (`InstrumentsStore`) with search, filter, and reactive updates.
 
 ### 4. Operating Room Schedule
 - **24-Hour Timeline Grid:** Comprehensive timeline visualization across all 6 operating theaters (OR-1 through OR-6), dynamically positioning surgical blocks by scheduled time and duration.
@@ -27,7 +29,7 @@ MedFlow is an enterprise-grade operational healthcare platform built with **Angu
 - **Accessible Interaction:** Interactive procedure blocks navigable via keyboard and screen reader friendly.
 
 ### 5. Conflict Detection & Alert Notification Center
-- **Pure Domain Engine:** Pure deterministic business rules detecting operational conflicts, such as overlapping procedures in the same theater and time window.
+- **Domain Engine:** Business rules detecting operational conflicts, such as overlapping procedures in the same theater and time window.
 - **Notification Dropdown:** Header notification menu with badge counter for active conflicts, categorizing issues by severity level (warning vs critical).
 
 ### 6. Procedure Detail & Deep Linking
@@ -36,12 +38,12 @@ MedFlow is an enterprise-grade operational healthcare platform built with **Angu
 
 ### 7. Audit Logging & Activity Feed
 - **Activity Store:** Event history managed via dedicated `ActivityStore`.
-- **Automatic Auditing via NgRx Effects:** Status transition actions automatically trigger activity log creation with timestamp, actor, and state delta.
+- **Automatic Auditing via NgRx Effects:** Status transition actions automatically trigger activity log creation with timestamp, a demo actor label, and the resulting status.
 
 ### 8. Design System & Dark Mode
-- **Enterprise Design Tokens:** CSS custom variables and Angular Material 3 themes supporting Light and Dark modes.
+- **Design Tokens:** CSS custom variables and Angular Material 3 themes supporting Light and Dark modes.
 - **Toolbar Theme Toggle:** Header switch with automatic `localStorage` synchronization.
-- **High-Contrast CDK Overlay Support:** Dedicated dark theme styling for overlays (`MatDialog`, `MatMenu`, `MatBadge`) conforming to WCAG 2.1 AA contrast standards.
+- **CDK Overlay Styling:** Dark theme styling for overlays (`MatDialog`, `MatMenu`, `MatBadge`). Automated accessibility scans currently exclude color contrast; WCAG compliance has not been verified.
 
 ---
 
@@ -50,7 +52,7 @@ MedFlow is an enterprise-grade operational healthcare platform built with **Angu
 | Layer | Technology |
 |---|---|
 | **Framework** | Angular 22 (Standalone Components, Zoneless Ready, Modern Control Flow `@if` / `@for`) |
-| **Language** | TypeScript 5.x (Strict Mode Enabled) |
+| **Language** | TypeScript 6.x (compiler options in `tsconfig.json`) |
 | **Global State** | `@ngrx/store`, `@ngrx/effects`, `@ngrx/entity`, `@ngrx/store-devtools` |
 | **Feature State** | `@ngrx/signals` (NgRx SignalStore with `withEntities`) |
 | **Reactivity** | Angular Signals (`signal`, `computed`, `effect`) & RxJS (`toSignal`, `Subject`, `debounceTime`) |
@@ -84,12 +86,12 @@ src/app/
 ## Getting Started
 
 ### Prerequisites
-- Node.js `20.x` or `22.x`
+- Node.js `^22.22.3`, `^24.15.0`, or `>=26.0.0` (as required by the locked Angular dependencies)
 - npm `10.x` or higher
 
 ### Installation
 ```bash
-git clone https://github.com/your-username/medflow.git
+git clone https://github.com/Rodnorm/medflow.git
 cd medflow
 npm install
 ```
@@ -126,13 +128,13 @@ npm run test:e2e:ui
 
 ## Planned Future Enhancements
 
-- [x] **Abstract HTTP Layer & Dependency Injection:** Decouple data services using `InjectionToken` (`PROCEDURE_API_TOKEN`, `INSTRUMENT_API_TOKEN`) allowing seamless transitions between in-memory mocks and remote backends.
+- [x] **Abstract HTTP Layer & Dependency Injection:** Decouple data services using `InjectionToken` (`PROCEDURE_API_TOKEN`, `INSTRUMENT_SET_API_TOKEN`) allowing seamless transitions between in-memory mocks and remote backends.
 - [x] **HTTP Interceptors & Resilience:** Global error interceptor with user feedback through `MatSnackBar`.
 - [x] **Full Zoneless Change Detection:** Enabled native `provideZonelessChangeDetection()` removing Zone.js runtime dependency.
 - [x] **Optimized Deferred Loading:** Implemented `@defer (on viewport)` for distribution charts.
 - [ ] **Command Palette (`Ctrl + K`):** Global quick navigation and action modal powered by CDK Overlay.
 - [ ] **Multi-Language Support (i18n):** Angular internationalization with dictionaries for English (`en-US`) and Portuguese (`pt-BR`).
-- [ ] **Simulated Real-Time Updates:** WebSocket or Server-Sent Events integration for live operational synchronization.
+- [x] **Simulated Real-Time Updates:** In-process timer simulates procedure and instrument status changes using the in-memory services. No WebSocket or SSE connection is implemented.
 - [ ] **Role-Based Access Control (RBAC):** Route protection with `CanMatchFn` guards and conditional structural directives for role-sensitive actions.
 - [ ] **Dedicated Backend Service:** FastAPI (Python) backend with relational database persistence and OpenAPI schema validation.
 - [ ] **Containerization & Deployment:** Docker multi-stage configuration and automated CI/CD pipeline for tests and deployment.

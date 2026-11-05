@@ -6,7 +6,7 @@ import {
 } from '../../models/procedure/procedure.model';
 import { INITIAL_PROCEDURES } from '../../data/synthetic-data';
 import { Injectable } from '@angular/core';
-import { IProcedureApi } from '../../api/api.tokens';
+import type { IProcedureApi } from '../../api/api.tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -27,14 +27,14 @@ export class ProcedureService implements IProcedureApi {
     const currentIndex = this.procedures.findIndex((p) => p.id === id);
 
     if (currentIndex === -1) {
-      return throwError(() => new Error('Procedure with id "${id}" not found.'));
+      return throwError(() => new Error(`Procedure with id "${id}" not found.`));
     }
 
     const currentItem = this.procedures[currentIndex];
 
     if (!canTransitionProcedure(currentItem.status, newStatus)) {
       return throwError(
-        () => new Error('Cannot transition from "${currentItem.status}" to "${newStatus}"'),
+        () => new Error(`Cannot transition from "${currentItem.status}" to "${newStatus}"`),
       );
     }
 

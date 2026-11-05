@@ -6,7 +6,7 @@ import {
   InstrumentSet,
   InstrumentSetStatus,
 } from '../../models/instrument-set/instrument-set.model';
-import { IInstrumentApi } from '../../api/api.tokens';
+import type { IInstrumentApi } from '../../api/api.tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -27,14 +27,14 @@ export class InstrumentSetService implements IInstrumentApi {
     const currentIndex = this.instrumentSets.findIndex((p) => p.id === id);
 
     if (currentIndex === -1) {
-      return throwError(() => new Error('Instrument Set  with id "${id}" not found.'));
+      return throwError(() => new Error(`Instrument Set  with id "${id}" not found.`));
     }
 
     const currentItem = this.instrumentSets[currentIndex];
 
     if (!canTransitionInstrumentSet(currentItem.status, newStatus)) {
       return throwError(
-        () => new Error('Cannot transition from "${currentItem.status}" to "${newStatus}"'),
+        () => new Error(`Cannot transition from "${currentItem.status}" to "${newStatus}"`),
       );
     }
 

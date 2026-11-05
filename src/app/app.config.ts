@@ -40,7 +40,7 @@ export const appConfig: ApplicationConfig = {
     provideEffects([ProceduresEffects]),
     provideStoreDevtools({
       maxAge: 25,
-      logOnly: !isDevMode,
+      logOnly: !isDevMode(),
     }),
   ],
 };
