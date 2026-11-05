@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -25,6 +25,7 @@ import { InstrumentSet } from '../../../core/models/instrument-set/instrument-se
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export type StatusFilterOption = 'all' | ProcedureStatus;
 
@@ -42,6 +43,8 @@ export type StatusFilterOption = 'all' | ProcedureStatus;
     MatSortModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    RouterLink,
+    MatTooltipModule,
   ],
   templateUrl: './procedure-list.html',
   styleUrl: './procedure-list.scss',

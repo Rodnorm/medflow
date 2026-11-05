@@ -4,7 +4,13 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
+import {
+  PreloadAllModules,
+  provideRouter,
+  withComponentInputBinding,
+  withPreloading,
+  withViewTransitions,
+} from '@angular/router';
 import { routes } from './app.routes';
 import { procedureReducer } from './core/store/procedures/procedure.reducer';
 import { provideStore } from '@ngrx/store';
@@ -27,6 +33,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withComponentInputBinding(),
+      withPreloading(PreloadAllModules),
       withViewTransitions({ skipInitialTransition: true }),
     ),
     provideStore({ procedures: procedureReducer }),

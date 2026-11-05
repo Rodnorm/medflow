@@ -30,8 +30,29 @@
         Schedule
       </a>
     </nav>
-
-    <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 12px">
+      <button
+        type="button"
+        class="live-pill"
+        [class.connected]="realtimeService.isSimulationActive()"
+        [class.disconnected]="!realtimeService.isSimulationActive()"
+        (click)="realtimeService.toggleSimulation()"
+        [matTooltip]="
+          realtimeService.isSimulationActive()
+            ? 'Live push active (click to pause)'
+            : 'Simulation paused (click to resume)'
+        "
+        [attr.aria-label]="
+          realtimeService.isSimulationActive()
+            ? 'Live feed active, click to pause'
+            : 'Live feed paused, click to resume'
+        "
+      >
+        <span class="pulse-dot"></span>
+        <span class="live-label">{{
+          realtimeService.isSimulationActive() ? 'LIVE' : 'PAUSED'
+        }}</span>
+      </button>
       <button
         mat-icon-button
         type="button"

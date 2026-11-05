@@ -20,7 +20,8 @@ describe('OverviewComponent', () => {
         unobserve = vi.fn();
         disconnect = vi.fn();
       }
-      window.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
+      window.IntersectionObserver =
+        MockIntersectionObserver as unknown as typeof IntersectionObserver;
     }
 
     await TestBed.configureTestingModule({

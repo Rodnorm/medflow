@@ -9,6 +9,8 @@
   letter-spacing: 0.04em;
   border: 1px solid transparent;
   line-height: 1;
+  white-space: nowrap;
+  user-select: none;
 
   &::before {
     content: '';

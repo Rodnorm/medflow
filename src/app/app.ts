@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ThemeService } from './core/services/theme/theme.service';
 import { AlertCenterComponent } from './shared/components/alert-center/alert-center';
+import { RealtimeService } from './core/services/realtime/realtime.service';
 
 @Component({
   selector: 'app-root',
@@ -25,4 +26,5 @@ import { AlertCenterComponent } from './shared/components/alert-center/alert-cen
 export class App {
   protected readonly title = signal('MedFlow Operations');
   readonly themeService = inject(ThemeService);
+  readonly realtimeService = inject(RealtimeService);
 }

@@ -324,3 +324,9 @@ html.dark-theme {
     box-shadow: 0 0 0 2px #0b1120 !important;
   }
 }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.12s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

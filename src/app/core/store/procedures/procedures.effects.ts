@@ -1,16 +1,23 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { ActivityStore } from '../activity/activity.store';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { ProceduresActions } from './procedures.action';
 import { PROCEDURE_API_TOKEN } from '../../api/api.tokens';
+import { RealtimeService } from '../../services/realtime/realtime.service';
+import { ProcedureStatusPayload } from '../../models/realtime/realtime.model';
+import { Procedure } from '../../models/procedure/procedure.model';
+import { selectProcedureEntities } from './procedures.selectors';
 
 @Injectable()
 export class ProceduresEffects {
   private readonly actions$ = inject(Actions);
   private readonly procedureService = inject(PROCEDURE_API_TOKEN);
   private readonly activityStore = inject(ActivityStore);
+  private readonly realtimeService = inject(RealtimeService);
+  private readonly store = inject(Store);
 
   loadProcedures$ = createEffect(() =>
     this.actions$.pipe(
@@ -59,5 +66,25 @@ export class ProceduresEffects {
         }),
       ),
     { dispatch: false },
+  );
+
+  realtimeProcedureUpdate$ = createEffect(() =>
+    this.realtimeService.event$.pipe(
+      filter((event) => event.type === 'PROCEDURE_STATUS_CHANGED'),
+      withLatestFrom(this.store.select(selectProcedureEntities)),
+      map(([event, entities]) => {
+        const payload = event.payload as ProcedureStatusPayload;
+        const existing = entities[payload.procedureId];
+        if (existing) {
+          const updated: Procedure = {
+            ...existing,
+            status: payload.status,
+            updatedAt: payload.updatedAt,
+          };
+          return ProceduresActions.updateStatusSuccess({ procedure: updated });
+        }
+        return ProceduresActions.loadProcedures();
+      }),
+    ),
   );
 }

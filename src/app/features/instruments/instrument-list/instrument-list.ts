@@ -8,6 +8,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { InstrumentSetService } from "../../../core/services/instrument-set/instrument-set.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
@@ -28,7 +29,8 @@ export type InstrumentStatusFilter = 'all' | InstrumentSetStatus;
         MatSelectModule,
         MatButtonModule,
         MatFormFieldModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatTooltipModule,
     ],
     templateUrl: './instrument-list.html',
     styleUrl: './instrument-list.scss'

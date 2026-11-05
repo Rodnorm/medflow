@@ -87,11 +87,13 @@
               <button mat-stroked-button [matMenuTriggerFor]="actionMenu" color="primary" class="action-btn">
                 Change Status &dtrif;
               </button>
+
               <mat-menu #actionMenu="matMenu">
                 @for (targetStatus of getTransitions(row.status); track targetStatus) {
                   <button mat-menu-item (click)="transitionStatus(row, targetStatus)">
                     Mark as {{ targetStatus }}
                   </button>
+
                 }
               </mat-menu>
             } @else {
