@@ -15,7 +15,6 @@ export class InstrumentFacade {
   readonly error = this.store.error;
   readonly loading = this.store.loading;
   readonly entityMap = this.store.entityMap;
-  // Suporte tanto a singular quanto a plural para compatibilidade
   readonly instruments = this.store.instruments;
   readonly instrument = this.store.instruments;
   readonly filteredInstruments = this.store.filteredInstruments;
@@ -37,5 +36,4 @@ export class InstrumentFacade {
   }
 }
 
-// Alias plural para manter interoperabilidade
 export { InstrumentFacade as InstrumentsFacade };

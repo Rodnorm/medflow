@@ -65,11 +65,9 @@ export class ProcedureListComponent {
     return map;
   });
 
-  // Filtros locais
   readonly searchTerm = signal<string>('');
   readonly selectedStatus = signal<StatusFilterOption>('all');
 
-  // Paginação e Ordenação
   readonly pageIndex = signal<number>(0);
   readonly pageSize = signal<number>(10);
   readonly sortField = signal<string>('scheduledDate');
@@ -87,7 +85,6 @@ export class ProcedureListComponent {
     'actions',
   ];
 
-  // 1. Filtragem primária
   readonly filteredProcedures = computed(() => {
     const status = this.selectedStatus();
     const search = this.searchTerm().trim().toLowerCase();
@@ -101,7 +98,6 @@ export class ProcedureListComponent {
     });
   });
 
-  // 2. Ordenação e fatiamento paginado
   readonly paginatedProcedures = computed(() => {
     const list = [...this.filteredProcedures()];
     const field = this.sortField();

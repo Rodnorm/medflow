@@ -63,7 +63,6 @@ export const InstrumentsStore = signalStore(
           instrumentService.getInstrumentSets().pipe(
             tap({
               next: (instruments) => {
-                // Spread para satisfazer tipo mutavel do setAllEntities
                 patchState(store, setAllEntities([...instruments]), { loading: false });
               },
               error: (err: Error) => {

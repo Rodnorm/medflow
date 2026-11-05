@@ -16,7 +16,6 @@
     </div>
   }
 
-  <!-- KPI Metrics Grid -->
   <section class="metrics-grid" aria-label="Key operational metrics">
     <app-metric-card
       title="Total Procedures"
@@ -54,33 +53,26 @@
     />
   </section>
 
-  <!-- Interactive Live Distribution Charts -->
-  <!-- Interactive Live Distribution Charts -->
   <section class="charts-section" aria-label="Operational distribution analytics">
-    <!-- Procedure Status Breakdown -->
     <mat-card class="chart-card">
       <div class="chart-header">
         <h3>Procedure Distribution</h3>
         <span class="chart-total">{{ totalProcedures() }} total registered</span>
       </div>
 
-      <!-- [MUDANÇA]: Substituindo as barras estáticas pelo Donut Chart interativo -->
       <app-donut-chart title="Procedures Distribution" [data]="procedureChartData()" />
     </mat-card>
 
-    <!-- Instrument Set Availability Breakdown -->
     <mat-card class="chart-card">
       <div class="chart-header">
         <h3>Instrument Sets Allocation</h3>
         <span class="chart-total">{{ totalInstruments() }} sets managed</span>
       </div>
 
-      <!-- [MUDANÇA]: Substituindo as barras estáticas pelo Donut Chart de Instrumentos -->
       <app-donut-chart title="Instrument Sets Allocation" [data]="instrumentChartData()" />
     </mat-card>
   </section>
 
-  <!-- Recent Procedures Table -->
   <section class="recent-section" aria-labelledby="recent-title">
     <mat-card>
       <div class="recent-header">
@@ -142,6 +134,7 @@
       </mat-card-content>
     </mat-card>
   </section>
+
   <section class="activity-section" style="margin-top: 24px">
     <mat-card style="padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0">
       <div

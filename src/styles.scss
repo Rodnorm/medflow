@@ -15,7 +15,6 @@ html {
 }
 
 :root {
-  // Clinical Operations Design Tokens (Light Theme Default)
   --med-bg-canvas: #f8fafc;
   --med-surface-bg: #f8fafc;
   --med-surface-card: #ffffff;
@@ -60,7 +59,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-// Material Components Global Tweaks
 .mat-mdc-card {
   border-radius: 12px !important;
   border: 1px solid var(--med-border-subtle) !important;
@@ -89,9 +87,6 @@ body {
   --mat-form-field-container-shape: 10px;
 }
 
-/* ==========================================================================
-   Modo Escuro Corporativo de Alto Contraste (Dark Theme - WCAG 2.1 AA)
-   ========================================================================== */
 html.dark-theme {
   @include mat.theme(
     (
@@ -123,13 +118,11 @@ html.dark-theme {
     color: var(--med-text-primary) !important;
   }
 
-  /* 1. Header Global */
   .app-header {
     background-color: #0b1120 !important;
     border-bottom: 1px solid var(--med-border-subtle) !important;
   }
 
-  /* 2. Cards, Containers e Filtros */
   .filters-bar,
   .header-card,
   .chart-card,
@@ -142,7 +135,6 @@ html.dark-theme {
     color: var(--med-text-primary) !important;
   }
 
-  /* 3. Tabelas de Dados (Worklist e Instrumentos) */
   .mat-mdc-table {
     background-color: var(--med-surface-card) !important;
   }
@@ -179,7 +171,6 @@ html.dark-theme {
     color: var(--med-text-secondary) !important;
   }
 
-  /* 4. Badges e Células Específicas */
   .code-cell,
   .set-link {
     color: #38bdf8 !important;
@@ -191,7 +182,6 @@ html.dark-theme {
     border-color: #334155 !important;
   }
 
-  /* 5. Linha do Tempo 24h (Operating Room Schedule) */
   .timeline-header {
     background-color: #0b1120 !important;
     border-bottom-color: #1e293b !important;
@@ -231,7 +221,6 @@ html.dark-theme {
     ) !important;
   }
 
-  /* 6. Inputs e Campos de Formulário Material */
   .mat-mdc-text-field-wrapper {
     background-color: #1e293b !important;
   }
@@ -244,7 +233,6 @@ html.dark-theme {
     color: #f8fafc !important;
   }
 
-  /* 7. Donut Chart e Activity Feed */
   .center-total {
     fill: #f8fafc !important;
   }
@@ -272,7 +260,6 @@ html.dark-theme {
     color: #f8fafc !important;
   }
 
-  /* 8. CDK Overlays: Dialogs & Menus */
   .cdk-overlay-pane {
     .mat-mdc-dialog-surface {
       background-color: #0f172a !important;
@@ -330,7 +317,6 @@ html.dark-theme {
     }
   }
 
-  /* 9. Badges & Notifications */
   .mat-badge-content {
     background-color: #ef4444 !important;
     color: #ffffff !important;

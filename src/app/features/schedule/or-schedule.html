@@ -11,9 +11,7 @@
       <span class="pill cancelled">Cancelled</span>
     </div>
   </div>
-  <!-- Grade da Linha do Tempo -->
   <div class="timeline-container">
-    <!-- Eixo de Horas (00:00 às 23:00) -->
     <div class="timeline-header">
       <div class="room-column-header">Operating Theater</div>
       <div class="hours-track">
@@ -24,9 +22,7 @@
         }
       </div>
     </div>
-    <!-- Linhas das Salas Cirúrgicas (OR-1 a OR-6) -->
     <div class="rooms-container">
-      <!-- Linha Vermelha de Tempo Atual ("Now Line") -->
       <div class="now-line" [style.left.%]="nowPositionPercent()" title="Current Time Indicator">
         <span class="now-badge">{{ currentTime() | date: 'HH:mm' }}</span>
       </div>
@@ -36,7 +32,6 @@
             <span class="room-badge">{{ room }}</span>
           </div>
           <div class="room-track">
-            <!-- Blocos de Procedimentos alocados nesta sala (botão acessível para atender a11y) -->
             @for (proc of getProceduresForRoom(room); track proc.id) {
               <button
                 type="button"

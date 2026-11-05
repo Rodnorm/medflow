@@ -1,6 +1,5 @@
 @if (procedure(); as proc) {
   <div class="detail-container">
-    <!-- Breadcrumb & Header -->
     <div class="breadcrumb">
       <a routerLink="/procedures" class="back-link">
         <mat-icon>arrow_back</mat-icon> Back to Worklist
@@ -20,9 +19,7 @@
         <div><strong>Duration:</strong> {{ proc.durationMinutes || 90 }} min</div>
       </div>
     </div>
-    <!-- Abas Analíticas (Resumo, Instrumentos, Auditoria) -->
     <mat-tab-group class="detail-tabs">
-      <!-- Aba 1: Resumo e Ações Rápidas -->
       <mat-tab label="Workflow & Actions">
         <div class="tab-content">
           <h3>Available Status Transitions</h3>
@@ -45,7 +42,6 @@
           }
         </div>
       </mat-tab>
-      <!-- Aba 2: Instrumental Cirúrgico Alocado -->
       <mat-tab label="Allocated Instruments">
         <div class="tab-content">
           @if (allocatedInstrument(); as set) {

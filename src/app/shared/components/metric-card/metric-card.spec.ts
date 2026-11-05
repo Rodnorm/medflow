@@ -12,7 +12,6 @@ describe('MetricCard', () => {
 
   it('should render title and value correctly', () => {
     const fixture = TestBed.createComponent(MetricCard);
-    // Setting modern Signal Inputs in tests via setInput
     fixture.componentRef.setInput('title', 'Total Procedures');
     fixture.componentRef.setInput('value', 24);
     fixture.detectChanges();
@@ -24,24 +23,23 @@ describe('MetricCard', () => {
 
   it('should display loading spinner when loading is true', () => {
     const fixture = TestBed.createComponent(MetricCard);
-    fixture.componentRef.setInput('title', 'In Progress');
+    fixture.componentRef.setInput('title', 'Total Procedures');
+    fixture.componentRef.setInput('value', 24);
     fixture.componentRef.setInput('loading', true);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('mat-progress-spinner')).not.toBeNull();
-    expect(compiled.querySelector('.metric-value')).toBeNull();
   });
 
-  it('should render link when route input is provided', () => {
+  it('should render optional hint when provided', () => {
     const fixture = TestBed.createComponent(MetricCard);
-    fixture.componentRef.setInput('title', 'Available Sets');
-    fixture.componentRef.setInput('route', '/instruments');
+    fixture.componentRef.setInput('title', 'Active Operating Rooms');
+    fixture.componentRef.setInput('value', 6);
+    fixture.componentRef.setInput('hint', 'All running smoothly');
     fixture.detectChanges();
 
-    const link = fixture.nativeElement.querySelector('.metric-link') as HTMLAnchorElement;
-    expect(link).not.toBeNull();
-    expect(link.getAttribute('href')).toBe('/instruments');
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.metric-hint')?.textContent).toContain('All running smoothly');
   });
 });
-

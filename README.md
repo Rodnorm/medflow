@@ -1,138 +1,138 @@
-# MedFlow — Painel Operacional Hospitalar & Centro Cirúrgico
+# MedFlow — Surgical Workflow & Clinical Operations Dashboard
 
-MedFlow é uma plataforma corporativa para gestão e coordenação de fluxo cirúrgico desenvolvida em **Angular 22**, combinando **Angular Signals**, **NgRx Global Store** (com `@ngrx/entity`) e **NgRx SignalStore**. O sistema centraliza o agendamento de procedimentos, a alocação de salas cirúrgicas, o ciclo de vida e esterilização de instrumentais cirúrgicos e a detecção em tempo real de conflitos operacionais.
-
----
-
-## Funcionalidades Implementadas
-
-### 1. Visão Geral Executiva (Overview)
-- **Métricas Operacionais em Tempo Real:** Cards reativos com totais de procedimentos (agendados, em andamento, concluídos) e disponibilidade de caixas cirúrgicas.
-- **Gráficos Donut SVG Nativos:** Visualização da distribuição de procedimentos e instrumentais com legendas interativas e suporte a acessibilidade (tabela semântica oculta para leitores de tela).
-- **Tabela de Procedimentos Recentes:** Listagem rápida com status dinâmicos e navegação direta para detalhes.
-
-### 2. Worklist Cirúrgica Avançada (Procedures)
-- **Filtros e Busca em Tempo Real:** Pesquisa textual (código e título) com debounce e filtro por status, ambos sincronizados bidirecionalmente via Query Parameters na URL.
-- **Ordenação e Paginação:** Integração com `MatSort` e `MatPaginator` sobre entidades gerenciadas pelo `@ngrx/entity`.
-- **Exportação de Dados:** Exportação da listagem filtrada para arquivo `.csv`.
-- **Gestão de Transições de Estado:** Diálogo modal (`MatDialog`) seguro para transição de status de procedimentos (`planned` → `in-progress` → `completed` ou `cancelled`) com confirmação de cancelamento.
-
-### 3. Rastreamento de Instrumentais Cirúrgicos (Instruments)
-- **Gerenciamento de Ciclo de Vida:** Controle de status (`available` ⇄ `reserved` ⇄ `in-use` → `cleaning` → `available` / `maintenance`) e localização física dos conjuntos.
-- **Arquitetura de Estado:** Estado local/compartilhado gerenciado via `@ngrx/signals` (`InstrumentsStore`) com busca, filtragem e atualização reativa.
-
-### 4. Agenda do Bloco Cirúrgico (Operating Room Schedule)
-- **Grade Temporal de 24 Horas:** Visualização das 6 salas cirúrgicas (OR-1 a OR-6) em linha do tempo com blocos posicionados dinamicamente baseados no horário de início e duração estimada.
-- **Linha "Agora" (Now Line):** Marcador vertical em tempo real indicando a hora atual na linha do tempo.
-- **Interatividade Acessível:** Blocos operacionais clicáveis e navegáveis via teclado para consulta rápida.
-
-### 5. Motor de Conflitos e Centro de Alertas
-- **Detecção Operacional Pura:** Regras de negócio puras que identificam procedimentos sobrepostos na mesma sala cirúrgica ou no mesmo intervalo de tempo.
-- **Centro de Notificações:** Menu dropdown na barra superior com badge numérico de alertas ativos e lista discriminada por severidade (aviso / crítico).
-
-### 6. Página de Detalhes do Procedimento (Deep Linking)
-- **Roteamento com Binding de Parâmetros:** Rota `/procedures/:id` utilizando `withComponentInputBinding()`.
-- **Abas Informativas:** Navegação em abas (`MatTabGroup`) separando visão geral clínica, alocação de instrumentais cirúrgicos e histórico de auditoria.
-
-### 7. Trilha de Auditoria & Activity Feed
-- **Store de Atividades:** Registro de histórico com `ActivityStore`.
-- **Auditoria Automática via NgRx Effects:** Ações de transição de status disparam automaticamente o registro de log com timestamp, usuário e alteração realizada.
-
-### 8. Design System e Dark Mode
-- **Design Tokens Corporativos:** Variáveis CSS e paletas do Angular Material 3 com suporte a temas Claro e Escuro.
-- **Alternador de Tema na Toolbar:** Persistência automática da preferência no `localStorage`.
-- **Compatibilidade com CDK Overlays:** Estilização escura de alto contraste para modais (`MatDialog`), menus (`MatMenu`) e badges (`MatBadge`) conforme WCAG 2.1 AA.
+MedFlow is an enterprise-grade operational healthcare platform built with **Angular 22**, combining **Angular Signals**, **NgRx Global Store** (with `@ngrx/entity`), and **NgRx SignalStore**. The system coordinates surgical procedure scheduling, operating room allocations, surgical instrument sterilization lifecycles, and real-time operational conflict detection.
 
 ---
 
-## Tecnologias Utilizadas
+## Implemented Features
 
-| Camada | Tecnologia |
+### 1. Executive Operations Overview
+- **Real-Time KPI Metrics:** Reactive cards displaying procedure status totals (planned, in progress, completed) and surgical tray availability.
+- **Native SVG Donut Charts:** Distribution visualization for procedures and instrument sets with interactive legends and built-in accessibility (hidden semantic data table for screen readers).
+- **Recent Procedures Table:** Fast operational listing with dynamic statuses and deep links to detail pages.
+
+### 2. Advanced Surgical Worklist
+- **Real-Time Filtering & Debounced Search:** Text search (code and title) with a 300ms debounce and status filter, bi-directionally synchronized via URL Query Parameters.
+- **Sorting & Pagination:** Built with `MatSort` and `MatPaginator` operating over `@ngrx/entity` managed collections.
+- **Data Export:** Instant export of filtered worklist entries to `.csv`.
+- **State Transition Workflow:** Secure modal dialog (`MatDialog`) handling strict status transitions (`planned` → `in-progress` → `completed` or `cancelled`) with destructive action confirmation.
+
+### 3. Surgical Instrument Tracking
+- **Lifecycle Tracking:** Granular status transitions (`available` ⇄ `reserved` ⇄ `in-use` → `cleaning` → `available` / `maintenance`) and physical bay location tracking.
+- **Feature State Architecture:** Feature-scoped state managed via `@ngrx/signals` (`InstrumentsStore`) with search, filter, and reactive updates.
+
+### 4. Operating Room Schedule
+- **24-Hour Timeline Grid:** Comprehensive timeline visualization across all 6 operating theaters (OR-1 through OR-6), dynamically positioning surgical blocks by scheduled time and duration.
+- **Live "Now" Marker:** Real-time vertical line indicating the current wall-clock time across the timeline.
+- **Accessible Interaction:** Interactive procedure blocks navigable via keyboard and screen reader friendly.
+
+### 5. Conflict Detection & Alert Notification Center
+- **Pure Domain Engine:** Pure deterministic business rules detecting operational conflicts, such as overlapping procedures in the same theater and time window.
+- **Notification Dropdown:** Header notification menu with badge counter for active conflicts, categorizing issues by severity level (warning vs critical).
+
+### 6. Procedure Detail & Deep Linking
+- **Routable Detail Views:** Route `/procedures/:id` powered by Angular's `withComponentInputBinding()`.
+- **Analytical Tabs:** Tabbed navigation (`MatTabGroup`) organizing clinical details, allocated surgical sets, and audit records.
+
+### 7. Audit Logging & Activity Feed
+- **Activity Store:** Event history managed via dedicated `ActivityStore`.
+- **Automatic Auditing via NgRx Effects:** Status transition actions automatically trigger activity log creation with timestamp, actor, and state delta.
+
+### 8. Design System & Dark Mode
+- **Enterprise Design Tokens:** CSS custom variables and Angular Material 3 themes supporting Light and Dark modes.
+- **Toolbar Theme Toggle:** Header switch with automatic `localStorage` synchronization.
+- **High-Contrast CDK Overlay Support:** Dedicated dark theme styling for overlays (`MatDialog`, `MatMenu`, `MatBadge`) conforming to WCAG 2.1 AA contrast standards.
+
+---
+
+## Technical Stack
+
+| Layer | Technology |
 |---|---|
-| **Framework** | Angular 22 (Standalone Components, Zoneless Ready, Sintaxe de Controle Moderno `@if` / `@for`) |
-| **Linguagem** | TypeScript 5.x (Strict Mode habilitado) |
-| **Estado Global** | `@ngrx/store`, `@ngrx/effects`, `@ngrx/entity`, `@ngrx/store-devtools` |
-| **Estado de Feature** | `@ngrx/signals` (NgRx SignalStore com `withEntities`) |
-| **Reatividade** | Angular Signals (`signal`, `computed`, `effect`) e RxJS (`toSignal`, `Subject`, `debounceTime`) |
-| **Interface & Design** | Angular Material 3, Angular CDK, Sass (SCSS) |
-| **Testes Unitários** | Vitest via `@angular/build:unit-test` |
-| **Testes End-to-End** | Playwright Test |
+| **Framework** | Angular 22 (Standalone Components, Zoneless Ready, Modern Control Flow `@if` / `@for`) |
+| **Language** | TypeScript 5.x (Strict Mode Enabled) |
+| **Global State** | `@ngrx/store`, `@ngrx/effects`, `@ngrx/entity`, `@ngrx/store-devtools` |
+| **Feature State** | `@ngrx/signals` (NgRx SignalStore with `withEntities`) |
+| **Reactivity** | Angular Signals (`signal`, `computed`, `effect`) & RxJS (`toSignal`, `Subject`, `debounceTime`) |
+| **UI & Styling** | Angular Material 3, Angular CDK, Sass (SCSS) |
+| **Unit Testing** | Vitest via `@angular/build:unit-test` |
+| **End-to-End Testing** | Playwright Test |
 
 ---
 
-## Estrutura do Projeto
+## Project Structure
 
 ```text
 src/app/
 ├── core/
-│   ├── data/                 # Base de dados sintética determinística
-│   ├── domain/               # Motores puros de regras de negócio (conflitos operacionais)
-│   ├── models/               # Tipos TypeScript, interfaces de domínio e máquinas de estado
-│   ├── services/             # Serviços (procedimentos, instrumentais, conflitos, tema)
-│   └── store/                # NgRx Store global (procedimentos, facades, effects, activity)
+│   ├── data/                 # Deterministic synthetic clinical dataset
+│   ├── domain/               # Pure business engines (conflict detector)
+│   ├── models/               # Domain interfaces, literals, and deterministic state machines
+│   ├── services/             # Application services (procedures, instruments, conflict, theme)
+│   └── store/                # NgRx global store (reducers, selectors, effects, facades, activity)
 ├── features/
-│   ├── overview/             # Dashboard executivo com KPIs e gráficos interativos
-│   ├── procedures/           # Worklist, página de detalhes e modal de transição
-│   ├── instruments/          # Rastreamento de caixas cirúrgicas via SignalStore
-│   └── schedule/             # Agenda 24h das salas cirúrgicas
+│   ├── overview/             # Operational dashboard with KPI cards and interactive charts
+│   ├── procedures/           # Worklist, detail view, and state transition dialog
+│   ├── instruments/          # Instrument tracking feature with SignalStore
+│   └── schedule/             # 24-hour operating theater timeline
 └── shared/
-    └── components/           # Componentes reutilizáveis (DonutChart, StatusBadge, AlertCenter)
+    └── components/           # Reusable UI components (DonutChart, StatusBadge, AlertCenter)
 ```
 
 ---
 
-## Como Executar o Projeto
+## Getting Started
 
-### Pré-requisitos
-- Node.js `20.x` ou `22.x`
-- npm `10.x` ou superior
+### Prerequisites
+- Node.js `20.x` or `22.x`
+- npm `10.x` or higher
 
-### Instalação
+### Installation
 ```bash
 git clone https://github.com/your-username/medflow.git
 cd medflow
 npm install
 ```
 
-### Servidor de Desenvolvimento
+### Development Server
 ```bash
 npm start
 ```
-Acesse `http://localhost:4200/` no navegador. A aplicação recarregará automaticamente com qualquer alteração salva.
+Navigate to `http://localhost:4200/` in your browser. The application reloads automatically when source files change.
 
-### Build de Produção
+### Production Build
 ```bash
 npm run build
 ```
-Os artefatos otimizados serão gerados no diretório `dist/medflow`.
+Optimized build artifacts will be generated in the `dist/medflow` directory.
 
-### Execução de Testes
+### Testing
 
-#### Testes Unitários (Vitest)
+#### Unit Tests (Vitest)
 ```bash
 npm test -- --no-watch
 ```
 
-#### Testes End-to-End (Playwright)
+#### End-to-End Tests (Playwright)
 ```bash
-# Execução headless
+# Headless run
 npm run test:e2e
 
-# Execução com interface interativa
+# Interactive UI mode
 npm run test:e2e:ui
 ```
 
 ---
 
-## Melhorias Futuras Previstas
+## Planned Future Enhancements
 
-- [ ] **Camada HTTP Abstrata e Injeção de Dependência:** Desacoplamento completo dos serviços de dados utilizando `InjectionToken` (`PROCEDURE_API_TOKEN`, `INSTRUMENT_API_TOKEN`) para alternância entre dados locais e API remota.
-- [ ] **Interceptors e Resiliência de Rede:** Adição de interceptor HTTP para captura global de falhas, tratamento de retry e feedback visual via `MatSnackBar`.
-- [ ] **Modo Zoneless Completo:** Habilitação nativa de `provideZonelessChangeDetection()` sem dependência do Zone.js.
-- [ ] **Carregamento Otimizado com `@defer`:** Uso de blocos de carregamento postergado (`@defer (on viewport)`) em gráficos e seções mais pesadas da página inicial.
-- [ ] **Command Palette (`Ctrl + K`):** Barra de comando rápido e busca global suspensa via CDK Overlay.
-- [ ] **Suporte a Múltiplos Idiomas (i18n):** Internacionalização com dicionários em Português (`pt-BR`) e Inglês (`en-US`).
-- [ ] **Simulação de Atualizações em Tempo Real:** Conexão com eventos via WebSocket ou Server-Sent Events para refletir alterações remotas instantaneamente.
-- [ ] **Controle de Acesso Baseado em Perfis (RBAC):** Proteção de rotas com guards (`CanMatchFn`) e diretivas condicionais para ações clínicas sensíveis.
-- [ ] **Backend Dedicado:** Serviço de API em FastAPI (Python) com banco de dados relacional e persistência real.
-- [ ] **Empacotamento e Implantação Contínua:** Configuração de contêineres Docker e pipeline de CI/CD para automação de testes e deploy.
+- [ ] **Abstract HTTP Layer & Dependency Injection:** Decouple data services using `InjectionToken` (`PROCEDURE_API_TOKEN`, `INSTRUMENT_API_TOKEN`) allowing seamless transitions between in-memory mocks and remote backends.
+- [ ] **HTTP Interceptors & Resilience:** Global error interceptor with automatic retry policies and user feedback through `MatSnackBar`.
+- [ ] **Full Zoneless Change Detection:** Enable native `provideZonelessChangeDetection()` removing Zone.js runtime dependency.
+- [ ] **Optimized Deferred Loading:** Implement `@defer (on viewport)` for non-critical charts and heavy widgets.
+- [ ] **Command Palette (`Ctrl + K`):** Global quick navigation and action modal powered by CDK Overlay.
+- [ ] **Multi-Language Support (i18n):** Angular internationalization with dictionaries for English (`en-US`) and Portuguese (`pt-BR`).
+- [ ] **Simulated Real-Time Updates:** WebSocket or Server-Sent Events integration for live operational synchronization.
+- [ ] **Role-Based Access Control (RBAC):** Route protection with `CanMatchFn` guards and conditional structural directives for role-sensitive actions.
+- [ ] **Dedicated Backend Service:** FastAPI (Python) backend with relational database persistence and OpenAPI schema validation.
+- [ ] **Containerization & Deployment:** Docker multi-stage configuration and automated CI/CD pipeline for tests and deployment.
