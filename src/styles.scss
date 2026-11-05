@@ -15,13 +15,14 @@ html {
 }
 
 :root {
-  // Clinical Operations Design Tokens
+  // Clinical Operations Design Tokens (Light Theme Default)
   --med-bg-canvas: #f8fafc;
+  --med-surface-bg: #f8fafc;
   --med-surface-card: #ffffff;
   --med-surface-elevated: #ffffff;
   --med-border-subtle: #e2e8f0;
   --med-border-card: rgba(226, 232, 240, 0.8);
-  
+
   --med-text-primary: #0f172a;
   --med-text-secondary: #475569;
   --med-text-muted: #94a3b8;
@@ -40,7 +41,8 @@ html {
   --med-purple-bg: #f3e8ff;
 
   --med-shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
-  --med-shadow-hover: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --med-shadow-hover:
+    0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
   --med-shadow-modal: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
 }
 
@@ -49,7 +51,11 @@ body {
   height: 100%;
   background-color: var(--med-bg-canvas);
   color: var(--med-text-primary);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -81,4 +87,254 @@ body {
 
 .mat-mdc-form-field {
   --mat-form-field-container-shape: 10px;
+}
+
+/* ==========================================================================
+   Modo Escuro Corporativo de Alto Contraste (Dark Theme - WCAG 2.1 AA)
+   ========================================================================== */
+html.dark-theme {
+  @include mat.theme(
+    (
+      color: (
+        theme-type: dark,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+    )
+  );
+
+  --med-bg-canvas: #090d16;
+  --med-surface-bg: #090d16;
+  --med-surface-card: #0f172a;
+  --med-surface-elevated: #1e293b;
+  --med-border-subtle: #1e293b;
+  --med-border-card: #1e293b;
+
+  --med-text-primary: #f8fafc;
+  --med-text-secondary: #94a3b8;
+  --med-text-muted: #64748b;
+
+  --med-primary: #38bdf8;
+  --med-primary-dark: #7dd3fc;
+  --med-primary-subtle: rgba(56, 189, 248, 0.15);
+
+  body {
+    background-color: var(--med-bg-canvas) !important;
+    color: var(--med-text-primary) !important;
+  }
+
+  /* 1. Header Global */
+  .app-header {
+    background-color: #0b1120 !important;
+    border-bottom: 1px solid var(--med-border-subtle) !important;
+  }
+
+  /* 2. Cards, Containers e Filtros */
+  .filters-bar,
+  .header-card,
+  .chart-card,
+  .table-container,
+  .timeline-container,
+  .detail-tabs,
+  mat-card {
+    background-color: var(--med-surface-card) !important;
+    border-color: var(--med-border-subtle) !important;
+    color: var(--med-text-primary) !important;
+  }
+
+  /* 3. Tabelas de Dados (Worklist e Instrumentos) */
+  .mat-mdc-table {
+    background-color: var(--med-surface-card) !important;
+  }
+
+  .mat-mdc-header-row {
+    background-color: #0b1120 !important;
+  }
+
+  .mat-mdc-header-cell {
+    background-color: #0b1120 !important;
+    color: #94a3b8 !important;
+    border-bottom-color: #1e293b !important;
+  }
+
+  .mat-mdc-row {
+    background-color: transparent !important;
+  }
+
+  .mat-mdc-cell {
+    color: #f1f5f9 !important;
+    border-bottom-color: #1e293b !important;
+
+    span, div, p {
+      color: inherit;
+    }
+  }
+
+  .mat-mdc-row:hover {
+    background-color: #1e293b !important;
+  }
+
+  .mat-mdc-paginator {
+    background-color: var(--med-surface-card) !important;
+    color: var(--med-text-secondary) !important;
+  }
+
+  /* 4. Badges e Células Específicas */
+  .code-cell,
+  .set-link {
+    color: #38bdf8 !important;
+  }
+
+  .theater-badge {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    border-color: #334155 !important;
+  }
+
+  /* 5. Linha do Tempo 24h (Operating Room Schedule) */
+  .timeline-header {
+    background-color: #0b1120 !important;
+    border-bottom-color: #1e293b !important;
+  }
+
+  .room-column-header {
+    color: #94a3b8 !important;
+  }
+
+  .hour-marker {
+    color: #64748b !important;
+    border-left-color: #1e293b !important;
+  }
+
+  .room-row {
+    border-bottom-color: #1e293b !important;
+  }
+
+  .room-label {
+    background-color: var(--med-surface-card) !important;
+    border-right-color: #1e293b !important;
+  }
+
+  .room-badge {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+  }
+
+  .room-track {
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent calc(100% / 24 - 1px),
+      #1e293b calc(100% / 24 - 1px),
+      #1e293b calc(100% / 24)
+    ) !important;
+  }
+
+  /* 6. Inputs e Campos de Formulário Material */
+  .mat-mdc-text-field-wrapper {
+    background-color: #1e293b !important;
+  }
+
+  .mat-mdc-form-field-input-control {
+    color: #f8fafc !important;
+  }
+
+  .mat-mdc-select-value {
+    color: #f8fafc !important;
+  }
+
+  /* 7. Donut Chart e Activity Feed */
+  .center-total {
+    fill: #f8fafc !important;
+  }
+
+  .center-label {
+    fill: #94a3b8 !important;
+  }
+
+  .legend-item {
+    color: #cbd5e1 !important;
+    &:hover {
+      background: #1e293b !important;
+    }
+    &.active {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+    }
+  }
+
+  .legend-item .label {
+    color: #cbd5e1 !important;
+  }
+
+  .legend-item .value {
+    color: #f8fafc !important;
+  }
+
+  /* 8. CDK Overlays: Dialogs & Menus */
+  .cdk-overlay-pane {
+    .mat-mdc-dialog-surface {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      border: 1px solid #1e293b !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .mat-mdc-dialog-title {
+      color: #f8fafc !important;
+    }
+
+    .mat-mdc-dialog-content {
+      color: #cbd5e1 !important;
+    }
+
+    .mat-mdc-dialog-actions {
+      border-top: 1px solid #1e293b !important;
+    }
+
+    .mat-mdc-menu-panel {
+      background-color: #0f172a !important;
+      border: 1px solid #1e293b !important;
+      box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5) !important;
+      color: #f8fafc !important;
+
+      .mat-mdc-menu-item {
+        color: #e2e8f0 !important;
+
+        &:hover,
+        &:focus {
+          background-color: #1e293b !important;
+          color: #ffffff !important;
+        }
+
+        .mat-icon {
+          color: #94a3b8 !important;
+        }
+      }
+    }
+
+    .mat-mdc-select-panel {
+      background-color: #0f172a !important;
+      border: 1px solid #1e293b !important;
+
+      .mat-mdc-option {
+        color: #e2e8f0 !important;
+
+        &:hover,
+        &.mdc-list-item--selected {
+          background-color: #1e293b !important;
+          color: #38bdf8 !important;
+        }
+      }
+    }
+  }
+
+  /* 9. Badges & Notifications */
+  .mat-badge-content {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 0 2px #0b1120 !important;
+  }
 }
