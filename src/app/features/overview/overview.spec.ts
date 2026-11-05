@@ -14,6 +14,15 @@ import { INSTRUMENT_SET_API_TOKEN } from '../../core/api/api.tokens';
 
 describe('OverviewComponent', () => {
   beforeEach(async () => {
+    if (typeof window !== 'undefined' && !window.IntersectionObserver) {
+      class MockIntersectionObserver {
+        observe = () => {};
+        unobserve = () => {};
+        disconnect = () => {};
+      }
+      window.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
+    }
+
     await TestBed.configureTestingModule({
       imports: [OverviewComponent],
       providers: [

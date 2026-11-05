@@ -1,4 +1,9 @@
-import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  isDevMode,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
 import { procedureReducer } from './core/store/procedures/procedure.reducer';
@@ -16,6 +21,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     { provide: PROCEDURE_API_TOKEN, useExisting: ProcedureService },
     { provide: INSTRUMENT_SET_API_TOKEN, useExisting: InstrumentSetService },
+    provideZoneChangeDetection(),
     provideHttpClient(withInterceptors([errorInterceptor])),
     provideBrowserGlobalErrorListeners(),
     provideRouter(

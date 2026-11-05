@@ -54,23 +54,29 @@
   </section>
 
   <section class="charts-section" aria-label="Operational distribution analytics">
-    <mat-card class="chart-card">
-      <div class="chart-header">
-        <h3>Procedure Distribution</h3>
-        <span class="chart-total">{{ totalProcedures() }} total registered</span>
+    @defer (on viewport) {
+      <mat-card class="chart-card">
+        <div class="chart-header">
+          <h3>Procedure Distribution</h3>
+          <span class="chart-total">{{ totalProcedures() }} total registered</span>
+        </div>
+
+        <app-donut-chart title="Procedures Distribution" [data]="procedureChartData()" />
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <div class="chart-header">
+          <h3>Instrument Sets Allocation</h3>
+          <span class="chart-total">{{ totalInstruments() }} sets managed</span>
+        </div>
+
+        <app-donut-chart title="Instrument Sets Allocation" [data]="instrumentChartData()" />
+      </mat-card>
+    } @placeholder {
+      <div style="min-height: 220px; display: flex; align-items: center; justify-content: center; grid-column: 1 / -1;">
+        <mat-progress-spinner diameter="36" mode="indeterminate" />
       </div>
-
-      <app-donut-chart title="Procedures Distribution" [data]="procedureChartData()" />
-    </mat-card>
-
-    <mat-card class="chart-card">
-      <div class="chart-header">
-        <h3>Instrument Sets Allocation</h3>
-        <span class="chart-total">{{ totalInstruments() }} sets managed</span>
-      </div>
-
-      <app-donut-chart title="Instrument Sets Allocation" [data]="instrumentChartData()" />
-    </mat-card>
+    }
   </section>
 
   <section class="recent-section" aria-labelledby="recent-title">
