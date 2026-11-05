@@ -126,8 +126,8 @@ npm run test:e2e:ui
 
 ## Planned Future Enhancements
 
-- [ ] **Abstract HTTP Layer & Dependency Injection:** Decouple data services using `InjectionToken` (`PROCEDURE_API_TOKEN`, `INSTRUMENT_API_TOKEN`) allowing seamless transitions between in-memory mocks and remote backends.
-- [ ] **HTTP Interceptors & Resilience:** Global error interceptor with automatic retry policies and user feedback through `MatSnackBar`.
+- [x] **Abstract HTTP Layer & Dependency Injection:** Decouple data services using `InjectionToken` (`PROCEDURE_API_TOKEN`, `INSTRUMENT_API_TOKEN`) allowing seamless transitions between in-memory mocks and remote backends.
+- [x] **HTTP Interceptors & Resilience:** Global error interceptor with user feedback through `MatSnackBar`.
 - [ ] **Full Zoneless Change Detection:** Enable native `provideZonelessChangeDetection()` removing Zone.js runtime dependency.
 - [ ] **Optimized Deferred Loading:** Implement `@defer (on viewport)` for non-critical charts and heavy widgets.
 - [ ] **Command Palette (`Ctrl + K`):** Global quick navigation and action modal powered by CDK Overlay.

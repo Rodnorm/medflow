@@ -9,11 +9,14 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { INSTRUMENT_SET_API_TOKEN, PROCEDURE_API_TOKEN } from './core/api/api.tokens';
 import { ProcedureService } from './core/services/procedure/procedure.service';
 import { InstrumentSetService } from './core/services/instrument-set/instrument-set.service';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: PROCEDURE_API_TOKEN, useExisting: ProcedureService },
     { provide: INSTRUMENT_SET_API_TOKEN, useExisting: InstrumentSetService },
+    provideHttpClient(withInterceptors([errorInterceptor])),
     provideBrowserGlobalErrorListeners(),
     provideRouter(
       routes,
