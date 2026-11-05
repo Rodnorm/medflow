@@ -17,25 +17,36 @@
         <span class="material-symbols-outlined nav-icon">dashboard</span>
         Overview
       </a>
-      <a
-        mat-button
-        routerLink="/procedures"
-        routerLinkActive="active-link"
-        class="nav-link"
-      >
+      <a mat-button routerLink="/procedures" routerLinkActive="active-link" class="nav-link">
         <span class="material-symbols-outlined nav-icon">local_hospital</span>
         Procedures
       </a>
-      <a
-        mat-button
-        routerLink="/instruments"
-        routerLinkActive="active-link"
-        class="nav-link"
-      >
+      <a mat-button routerLink="/instruments" routerLinkActive="active-link" class="nav-link">
         <span class="material-symbols-outlined nav-icon">precision_manufacturing</span>
         Instruments
       </a>
+      <a mat-button routerLink="/schedule" routerLinkActive="active-link" class="nav-link">
+        <span class="material-symbols-outlined nav-icon">calendar_month</span>
+        Schedule
+      </a>
     </nav>
+
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+      <button
+        mat-icon-button
+        type="button"
+        (click)="themeService.toggleTheme()"
+        [matTooltip]="
+          themeService.currentTheme() === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'
+        "
+        aria-label="Toggle visual theme"
+      >
+        <mat-icon>{{
+          themeService.currentTheme() === 'dark' ? 'light_mode' : 'dark_mode'
+        }}</mat-icon>
+      </button>
+      <app-alert-center />
+    </div>
   </mat-toolbar>
 </header>
 

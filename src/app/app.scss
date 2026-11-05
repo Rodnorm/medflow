@@ -13,6 +13,19 @@
     align-items: center;
     padding: 0 24px;
     height: 64px;
+
+    button[mat-icon-button] {
+      color: #94a3b8;
+      transition: color 0.15s ease-in-out;
+
+      &:hover {
+        color: #ffffff;
+      }
+
+      mat-icon {
+        color: inherit;
+      }
+    }
   }
 }
 
