@@ -6,9 +6,9 @@ import {
 import { InstrumentStatusFilter } from '../../../features/instruments/instrument-list/instrument-list';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
-import { InstrumentSetService } from '../../services/instrument-set/instrument-set.service';
 import { pipe, switchMap, tap } from 'rxjs';
 import { withEntities, setAllEntities, updateEntity } from '@ngrx/signals/entities';
+import { INSTRUMENT_SET_API_TOKEN } from '../../api/api.tokens';
 
 interface InstrumentState {
   loading: boolean;
@@ -49,7 +49,7 @@ export const InstrumentsStore = signalStore(
     }),
   })),
 
-  withMethods((store, instrumentService = inject(InstrumentSetService)) => ({
+  withMethods((store, instrumentService = inject(INSTRUMENT_SET_API_TOKEN)) => ({
     setSearchTerm(searchTerm: string): void {
       patchState(store, { searchTerm });
     },

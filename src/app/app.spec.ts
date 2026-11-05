@@ -1,12 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
 import { App } from './app';
+import { selectAllProcedures } from './core/store/procedures/procedures.selectors';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        provideMockStore({
+          selectors: [{ selector: selectAllProcedures, value: [] }],
+        }),
+      ],
     }).compileComponents();
   });
 

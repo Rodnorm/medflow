@@ -9,19 +9,28 @@ export class ThemeService {
   private readonly STORAGE_KEY = 'medflow_theme';
 
   readonly currentTheme = signal<ThemeMode>(
-    (localStorage.getItem(this.STORAGE_KEY) as ThemeMode) ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
+    (typeof localStorage !== 'undefined'
+      ? (localStorage.getItem(this.STORAGE_KEY) as ThemeMode)
+      : null) ||
+      (typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-color-scheme: dark)')?.matches
+        ? 'dark'
+        : 'light'),
   );
 
   constructor() {
     effect(() => {
       const theme = this.currentTheme();
-      localStorage.setItem(this.STORAGE_KEY, theme);
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(this.STORAGE_KEY, theme);
+      }
 
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark-theme');
-      } else {
-        document.documentElement.classList.remove('dark-theme');
+      if (typeof document !== 'undefined') {
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark-theme');
+        } else {
+          document.documentElement.classList.remove('dark-theme');
+        }
       }
     });
   }

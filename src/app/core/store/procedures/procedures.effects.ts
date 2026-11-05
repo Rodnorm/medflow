@@ -3,13 +3,13 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { ActivityStore } from '../activity/activity.store';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { ProcedureService } from '../../services/procedure/procedure.service';
 import { ProceduresActions } from './procedures.action';
+import { PROCEDURE_API_TOKEN } from '../../api/api.tokens';
 
 @Injectable()
 export class ProceduresEffects {
   private readonly actions$ = inject(Actions);
-  private readonly procedureService = inject(ProcedureService);
+  private readonly procedureService = inject(PROCEDURE_API_TOKEN);
   private readonly activityStore = inject(ActivityStore);
 
   loadProcedures$ = createEffect(() =>
