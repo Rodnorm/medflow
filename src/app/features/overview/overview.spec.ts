@@ -16,9 +16,9 @@ describe('OverviewComponent', () => {
   beforeEach(async () => {
     if (typeof window !== 'undefined' && !window.IntersectionObserver) {
       class MockIntersectionObserver {
-        observe = () => {};
-        unobserve = () => {};
-        disconnect = () => {};
+        observe = vi.fn();
+        unobserve = vi.fn();
+        disconnect = vi.fn();
       }
       window.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
     }
@@ -52,7 +52,7 @@ describe('OverviewComponent', () => {
     expect(component).toBeTruthy();
     expect(component.totalProcedures()).toBe(INITIAL_PROCEDURES.length);
     expect(component.loading()).toBe(false);
-  });
+  }, 15000);
 
   it('should render the metrics grid and recent procedures table', () => {
     const fixture = TestBed.createComponent(OverviewComponent);

@@ -33,7 +33,9 @@ export class ProcedureDetailComponent {
   private readonly procedureFacade = inject(ProceduresFacade);
 
   readonly procedure = computed(() =>
-    this.procedureFacade.procedures().find((p) => p.id === this.id()),
+    this.procedureFacade
+      .procedures()
+      .find((p) => p.id === this.id() || p.code.toLowerCase() === this.id().toLowerCase()),
   );
 
   readonly allocatedInstrument = computed(() => {

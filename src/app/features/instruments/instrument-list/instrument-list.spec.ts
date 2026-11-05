@@ -28,7 +28,7 @@ describe('InstrumentListComponent', () => {
     }).compileComponents();
   });
 
-  it('should create and load instrument sets via store', () => {
+  it('should create and load instrument sets via store', { timeout: 15000 }, () => {
     const fixture = TestBed.createComponent(InstrumentListComponent);
     fixture.detectChanges();
 

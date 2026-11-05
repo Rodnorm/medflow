@@ -2,7 +2,7 @@ import {
   ApplicationConfig,
   isDevMode,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     { provide: PROCEDURE_API_TOKEN, useExisting: ProcedureService },
     { provide: INSTRUMENT_SET_API_TOKEN, useExisting: InstrumentSetService },
-    provideZoneChangeDetection(),
+    provideZonelessChangeDetection(),
     provideHttpClient(withInterceptors([errorInterceptor])),
     provideBrowserGlobalErrorListeners(),
     provideRouter(

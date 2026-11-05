@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { getAvailableInstrumentSetTransitions, InstrumentSet, InstrumentSetStatus } from "../../../core/models/instrument-set/instrument-set.model";
 import { DatePipe } from "@angular/common";
 import { MatTableModule } from "@angular/material/table";

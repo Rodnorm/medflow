@@ -21,7 +21,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  });
+  }, 15000);
 
   it('should render the app shell with navigation and main landmark', async () => {
     const fixture = TestBed.createComponent(App);

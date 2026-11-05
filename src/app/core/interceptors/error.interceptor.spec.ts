@@ -69,7 +69,7 @@ describe('errorInterceptor', () => {
 
   it('should fallback to HTTP status code when error body has no message', () => {
     httpClient.get('/api/test').subscribe({
-      error: () => {},
+      error: vi.fn(),
     });
 
     const req = httpTesting.expectOne('/api/test');
