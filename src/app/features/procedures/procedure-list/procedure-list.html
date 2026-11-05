@@ -63,7 +63,11 @@
       <ng-container matColumnDef="code">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
         <td mat-cell *matCellDef="let row" class="code-cell">
-          <a [routerLink]="['/procedures', row.id]" class="code-link" matTooltip="View procedure details">
+          <a
+            [routerLink]="['/procedures', row.id]"
+            class="code-link"
+            matTooltip="View procedure details"
+          >
             {{ row.code }}
           </a>
         </td>
@@ -72,7 +76,11 @@
       <ng-container matColumnDef="title">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Procedure Title</th>
         <td mat-cell *matCellDef="let row">
-          <a [routerLink]="['/procedures', row.id]" class="title-link" matTooltip="View procedure details">
+          <a
+            [routerLink]="['/procedures', row.id]"
+            class="title-link"
+            matTooltip="View procedure details"
+          >
             {{ row.title }}
           </a>
         </td>
@@ -162,4 +170,3 @@
     />
   }
 </div>
-<

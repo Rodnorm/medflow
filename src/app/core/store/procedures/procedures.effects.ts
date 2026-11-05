@@ -8,7 +8,7 @@ import { ProceduresActions } from './procedures.action';
 import { PROCEDURE_API_TOKEN } from '../../api/api.tokens';
 import { RealtimeService } from '../../services/realtime/realtime.service';
 import { ProcedureStatusPayload } from '../../models/realtime/realtime.model';
-import { Procedure } from '../../models/procedure/procedure.model';
+import { canTransitionProcedure, Procedure } from '../../models/procedure/procedure.model';
 import { selectProcedureEntities } from './procedures.selectors';
 
 @Injectable()
@@ -72,6 +72,15 @@ export class ProceduresEffects {
     this.realtimeService.event$.pipe(
       filter((event) => event.type === 'PROCEDURE_STATUS_CHANGED'),
       withLatestFrom(this.store.select(selectProcedureEntities)),
+      filter(([event, entities]) => {
+        const payload = event.payload as ProcedureStatusPayload;
+        const existing = entities[payload.procedureId];
+        return (
+          !existing ||
+          (Date.parse(payload.updatedAt) > Date.parse(existing.updatedAt) &&
+            canTransitionProcedure(existing.status, payload.status))
+        );
+      }),
       map(([event, entities]) => {
         const payload = event.payload as ProcedureStatusPayload;
         const existing = entities[payload.procedureId];

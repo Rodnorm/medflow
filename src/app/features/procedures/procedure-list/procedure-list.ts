@@ -222,15 +222,9 @@ export class ProcedureListComponent {
   }
 
   openManageDialog(procedure: Procedure): void {
-    const dialogRef = this.dialog.open(ProcedureDetailDialogComponent, {
+    this.dialog.open(ProcedureDetailDialogComponent, {
       data: { procedure },
       width: '540px',
-    });
-
-    dialogRef.afterClosed().subscribe((updated: Procedure | undefined) => {
-      if (updated) {
-        this.store.dispatch(ProceduresActions.updateStatusSuccess({ procedure: updated }));
-      }
     });
   }
 }

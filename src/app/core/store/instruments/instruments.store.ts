@@ -1,12 +1,22 @@
 import { computed, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RealtimeService } from '../../services/realtime/realtime.service';
+import { filter } from 'rxjs';
 import {
   InstrumentSet,
   InstrumentSetStatus,
 } from '../../models/instrument-set/instrument-set.model';
 import { InstrumentStatusFilter } from '../../../features/instruments/instrument-list/instrument-list';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
-import { pipe, switchMap, tap } from 'rxjs';
+import {
+  signalStore,
+  withState,
+  withComputed,
+  withMethods,
+  withHooks,
+  patchState,
+} from '@ngrx/signals';
+import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { withEntities, setAllEntities, updateEntity } from '@ngrx/signals/entities';
 import { INSTRUMENT_SET_API_TOKEN } from '../../api/api.tokens';
 
@@ -65,12 +75,13 @@ export const InstrumentsStore = signalStore(
               next: (instruments) => {
                 patchState(store, setAllEntities([...instruments]), { loading: false });
               },
-              error: (err: Error) => {
-                patchState(store, {
-                  error: err.message ?? 'Failed to load instruments',
-                  loading: false,
-                });
-              },
+            }),
+            catchError((err: Error) => {
+              patchState(store, {
+                error: err.message ?? 'Failed to load instruments',
+                loading: false,
+              });
+              return EMPTY;
             }),
           ),
         ),
@@ -79,6 +90,7 @@ export const InstrumentsStore = signalStore(
 
     updateStatus: rxMethod<{ set: InstrumentSet; newStatus: InstrumentSetStatus }>(
       pipe(
+        tap(() => patchState(store, { loading: true, error: null })),
         switchMap(({ set, newStatus }) =>
           instrumentService.updateStatus(set.id, newStatus).pipe(
             tap({
@@ -87,15 +99,27 @@ export const InstrumentsStore = signalStore(
                   loading: false,
                 });
               },
-              error: (err: Error) => {
-                patchState(store, {
-                  error: err.message ?? 'Failed to transition status',
-                });
-              },
+            }),
+            catchError((err: Error) => {
+              patchState(store, {
+                error: err.message ?? 'Failed to transition status',
+                loading: false,
+              });
+              return EMPTY;
             }),
           ),
         ),
       ),
     ),
   })),
+  withHooks({
+    onInit(store) {
+      inject(RealtimeService)
+        .event$.pipe(
+          filter((event) => event.type === 'INSTRUMENT_STATUS_CHANGED'),
+          takeUntilDestroyed(),
+        )
+        .subscribe(() => store.loadInstruments());
+    },
+  }),
 );

@@ -1,5 +1,7 @@
 import { DatePipe, NgClass } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { interval } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +35,11 @@ export class OrScheduleComponent {
 
   constructor() {
     this.proceduresFacade.loadProcedures();
+    interval(60_000)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.currentTime.set(new Date());
+      });
   }
 
   getProceduresForRoom(room: string): Procedure[] {

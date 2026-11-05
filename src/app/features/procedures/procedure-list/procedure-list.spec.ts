@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { vi } from 'vitest';
+import { MatDialog } from '@angular/material/dialog';
+import { of } from 'rxjs';
 
 import { ProcedureListComponent } from './procedure-list';
 import { INITIAL_PROCEDURES } from '../../../core/data/synthetic-data';
@@ -42,6 +44,19 @@ describe('ProcedureListComponent', () => {
     expect(component).toBeTruthy();
     expect(store.dispatch).toHaveBeenCalledWith(ProceduresActions.loadProcedures());
     expect(component.rawProcedures().length).toBe(INITIAL_PROCEDURES.length);
+  });
+
+  it('does not dispatch a second success when the manage dialog closes', () => {
+    const fixture = TestBed.createComponent(ProcedureListComponent);
+    const procedure = INITIAL_PROCEDURES[0];
+    vi.spyOn(TestBed.inject(MatDialog), 'open').mockReturnValue({
+      afterClosed: () => of(procedure),
+    } as never);
+    vi.mocked(store.dispatch).mockClear();
+    fixture.componentInstance.openManageDialog(procedure);
+    expect(store.dispatch).not.toHaveBeenCalledWith(
+      ProceduresActions.updateStatusSuccess({ procedure }),
+    );
   });
 
   it('should filter procedures when searchTerm changes', () => {
