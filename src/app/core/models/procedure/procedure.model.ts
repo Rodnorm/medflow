@@ -27,3 +27,20 @@ export function getAvailableProcedureTransitions(
 ): readonly ProcedureStatus[] {
   return PROCEDURE_TRANSITIONS[current];
 }
+
+export interface BulkTransitionPlan {
+  readonly eligible: readonly Procedure[];
+  readonly skipped: readonly Procedure[];
+}
+
+export function planBulkTransition(
+  procedures: readonly Procedure[],
+  selectedIds: ReadonlySet<string>,
+  target: ProcedureStatus,
+): BulkTransitionPlan {
+  const selected = procedures.filter((procedure) => selectedIds.has(procedure.id));
+  return {
+    eligible: selected.filter((procedure) => canTransitionProcedure(procedure.status, target)),
+    skipped: selected.filter((procedure) => !canTransitionProcedure(procedure.status, target)),
+  };
+}

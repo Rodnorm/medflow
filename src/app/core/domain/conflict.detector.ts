@@ -9,6 +9,7 @@ export interface OperationalAlert {
   message: string;
   timestamp: string;
   procedureId: string;
+  instrumentSetId?: string;
   severity: AlertSeverity;
   type: 'room-overlap' | 'instrument-unready';
 }
@@ -61,6 +62,7 @@ export function detectOperationalConflicts(
           title: `Instrument Set Unavailable: ${set.code}`,
           message: `Procedure "${a.code}" requires "${set.name}", but the set is currently in ${set.status}.`,
           procedureId: a.id,
+          instrumentSetId: set.id,
           timestamp: new Date().toISOString(),
         });
       }
