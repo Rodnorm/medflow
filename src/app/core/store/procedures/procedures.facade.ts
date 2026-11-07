@@ -37,4 +37,12 @@ export class ProceduresFacade {
   updateStatusSuccess(procedure: Procedure): void {
     this.store.dispatch(ProceduresActions.updateStatusSuccess({ procedure }));
   }
+
+  moveProcedure(id: string, operatingRoom: string, scheduledDate: string): void {
+    this.store.dispatch(ProceduresActions.moveProcedure({ id, operatingRoom, scheduledDate }));
+  }
+
+  clearError(): void {
+    this.store.dispatch(ProceduresActions.clearError());
+  }
 }

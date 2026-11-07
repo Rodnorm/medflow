@@ -9,6 +9,8 @@ describe('Realtime simulation', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     TestBed.configureTestingModule({});
+    TestBed.inject(ProcedureService).reset();
+    TestBed.inject(InstrumentSetService).reset();
   });
   afterEach(() => {
     TestBed.resetTestingModule();

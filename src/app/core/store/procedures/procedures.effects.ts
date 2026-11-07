@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { ActivityStore } from '../activity/activity.store';
-import { catchError, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { ProceduresActions } from './procedures.action';
 import { PROCEDURE_API_TOKEN } from '../../api/api.tokens';
 import { RealtimeService } from '../../services/realtime/realtime.service';
@@ -38,7 +38,7 @@ export class ProceduresEffects {
   updateStatus$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProceduresActions.updateStatus),
-      switchMap(({ id, newStatus }) =>
+      mergeMap(({ id, newStatus }) =>
         this.procedureService.updateStatus(id, newStatus).pipe(
           map((procedure) => ProceduresActions.updateStatusSuccess({ procedure })),
           catchError((err: Error) =>
@@ -47,6 +47,39 @@ export class ProceduresEffects {
         ),
       ),
     ),
+  );
+
+  moveProcedure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProceduresActions.moveProcedure),
+      concatMap(({ id, operatingRoom, scheduledDate }) =>
+        this.procedureService.moveProcedure(id, operatingRoom, scheduledDate).pipe(
+          map((procedure) => ProceduresActions.moveProcedureSuccess({ procedure })),
+          catchError((err: Error) =>
+            of(ProceduresActions.moveProcedureFailure({ error: err.message })),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  recordRescheduleActivity$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(ProceduresActions.moveProcedureSuccess),
+        tap(({ procedure }) => {
+          this.activityStore.recordEvent({
+            type: 'procedure_rescheduled',
+            title: 'Procedure Rescheduled',
+            description: `${procedure.title} moved to ${procedure.operatingRoom}`,
+            entityId: procedure.id,
+            entityCode: procedure.code,
+            toStatus: procedure.status,
+            author: 'Nurse Coordinator (Live)',
+          });
+        }),
+      ),
+    { dispatch: false },
   );
 
   recordStatusChangeActivity$ = createEffect(

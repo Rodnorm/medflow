@@ -10,6 +10,7 @@ describe('Procedure Service', () => {
       providers: [ProcedureService],
     });
     service = TestBed.inject(ProcedureService);
+    service.reset();
   });
 
   it('should retrieve all procedures', async () => {
@@ -37,5 +38,14 @@ describe('Procedure Service', () => {
 
   it('should reject invalid status transitions with an error', async () => {
     await expect(firstValueFrom(service.updateStatus('prc-001', 'completed'))).rejects.toThrow();
+  });
+
+  it('persists updates to localStorage and clears them on reset', async () => {
+    await firstValueFrom(service.updateStatus('prc-001', 'in-progress'));
+    const stored = localStorage.getItem('medflow_procedures_v1');
+    expect(stored).toContain('"status":"in-progress"');
+
+    service.reset();
+    expect(localStorage.getItem('medflow_procedures_v1')).toBeNull();
   });
 });

@@ -34,6 +34,10 @@ export class InstrumentFacade {
   updateStatus(set: InstrumentSet, newStatus: InstrumentSetStatus): void {
     this.store.updateStatus({ set, newStatus });
   }
+
+  clearError(): void {
+    this.store.clearError();
+  }
 }
 
 export { InstrumentFacade as InstrumentsFacade };

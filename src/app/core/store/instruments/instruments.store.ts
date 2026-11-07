@@ -19,6 +19,7 @@ import {
 import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { withEntities, setAllEntities, updateEntity } from '@ngrx/signals/entities';
 import { INSTRUMENT_SET_API_TOKEN } from '../../api/api.tokens';
+import { ActivityStore } from '../activity/activity.store';
 
 interface InstrumentState {
   loading: boolean;
@@ -59,59 +60,77 @@ export const InstrumentsStore = signalStore(
     }),
   })),
 
-  withMethods((store, instrumentService = inject(INSTRUMENT_SET_API_TOKEN)) => ({
-    setSearchTerm(searchTerm: string): void {
-      patchState(store, { searchTerm });
-    },
-    setSelectedStatus(selectedStatus: InstrumentStatusFilter): void {
-      patchState(store, { selectedStatus });
-    },
-    loadInstruments: rxMethod<void>(
-      pipe(
-        tap(() => patchState(store, { loading: true, error: null })),
-        switchMap(() =>
-          instrumentService.getInstrumentSets().pipe(
-            tap({
-              next: (instruments) => {
-                patchState(store, setAllEntities([...instruments]), { loading: false });
-              },
-            }),
-            catchError((err: Error) => {
-              patchState(store, {
-                error: err.message ?? 'Failed to load instruments',
-                loading: false,
-              });
-              return EMPTY;
-            }),
-          ),
-        ),
-      ),
-    ),
-
-    updateStatus: rxMethod<{ set: InstrumentSet; newStatus: InstrumentSetStatus }>(
-      pipe(
-        tap(() => patchState(store, { loading: true, error: null })),
-        switchMap(({ set, newStatus }) =>
-          instrumentService.updateStatus(set.id, newStatus).pipe(
-            tap({
-              next: (updated) => {
-                patchState(store, updateEntity({ id: updated.id, changes: updated }), {
+  withMethods(
+    (
+      store,
+      instrumentService = inject(INSTRUMENT_SET_API_TOKEN),
+      activityStore = inject(ActivityStore),
+    ) => ({
+      setSearchTerm(searchTerm: string): void {
+        patchState(store, { searchTerm });
+      },
+      setSelectedStatus(selectedStatus: InstrumentStatusFilter): void {
+        patchState(store, { selectedStatus });
+      },
+      clearError(): void {
+        patchState(store, { error: null });
+      },
+      loadInstruments: rxMethod<void>(
+        pipe(
+          tap(() => patchState(store, { loading: true, error: null })),
+          switchMap(() =>
+            instrumentService.getInstrumentSets().pipe(
+              tap({
+                next: (instruments) => {
+                  patchState(store, setAllEntities([...instruments]), { loading: false });
+                },
+              }),
+              catchError((err: Error) => {
+                patchState(store, {
+                  error: err.message ?? 'Failed to load instruments',
                   loading: false,
                 });
-              },
-            }),
-            catchError((err: Error) => {
-              patchState(store, {
-                error: err.message ?? 'Failed to transition status',
-                loading: false,
-              });
-              return EMPTY;
-            }),
+                return EMPTY;
+              }),
+            ),
           ),
         ),
       ),
-    ),
-  })),
+
+      updateStatus: rxMethod<{ set: InstrumentSet; newStatus: InstrumentSetStatus }>(
+        pipe(
+          tap(() => patchState(store, { loading: true, error: null })),
+          switchMap(({ set, newStatus }) =>
+            instrumentService.updateStatus(set.id, newStatus).pipe(
+              tap({
+                next: (updated) => {
+                  patchState(store, updateEntity({ id: updated.id, changes: updated }), {
+                    loading: false,
+                  });
+                  activityStore.recordEvent({
+                    type: 'instrument_status_changed',
+                    title: `Instrument Set ${updated.status.toUpperCase()}`,
+                    description: `${updated.name} marked as "${updated.status}" at ${updated.location}`,
+                    entityId: updated.id,
+                    entityCode: updated.code,
+                    toStatus: updated.status,
+                    author: 'Instrument Manager (Live)',
+                  });
+                },
+              }),
+              catchError((err: Error) => {
+                patchState(store, {
+                  error: err.message ?? 'Failed to transition status',
+                  loading: false,
+                });
+                return EMPTY;
+              }),
+            ),
+          ),
+        ),
+      ),
+    }),
+  ),
   withHooks({
     onInit(store) {
       inject(RealtimeService)

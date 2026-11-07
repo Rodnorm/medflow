@@ -55,4 +55,23 @@ export const procedureReducer = createReducer(
     error,
     loading: false,
   })),
+
+  on(ProceduresActions.moveProcedure, (state) => ({
+    ...state,
+    error: null,
+  })),
+
+  on(ProceduresActions.moveProcedureSuccess, (state, { procedure }) =>
+    procedureAdapter.updateOne({ id: procedure.id, changes: procedure }, state),
+  ),
+
+  on(ProceduresActions.moveProcedureFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
+
+  on(ProceduresActions.clearError, (state) => ({
+    ...state,
+    error: null,
+  })),
 );

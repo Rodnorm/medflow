@@ -1,53 +1,79 @@
-import { of, Observable, delay, throwError } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { canPlaceProcedure } from '../../domain/schedule.rules';
 import {
   canTransitionProcedure,
   Procedure,
   ProcedureStatus,
 } from '../../models/procedure/procedure.model';
 import { INITIAL_PROCEDURES } from '../../data/synthetic-data';
-import { Injectable } from '@angular/core';
 import type { IProcedureApi } from '../../api/api.tokens';
+import { ApiSimulationService } from '../api-simulation/api-simulation.service';
+import { loadStorage, removeStorage, saveStorage } from '../../util/storage.util';
+
+export const PROCEDURES_STORAGE_KEY = 'medflow_procedures_v1';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProcedureService implements IProcedureApi {
-  private procedures: Procedure[] = [...INITIAL_PROCEDURES];
+  private readonly simulation = inject(ApiSimulationService);
+  private procedures: Procedure[] = loadStorage(PROCEDURES_STORAGE_KEY, [...INITIAL_PROCEDURES]);
 
   getProcedures(): Observable<readonly Procedure[]> {
-    return of(this.procedures).pipe(delay(200));
+    return this.simulation.respond(() => this.procedures);
   }
 
   getProcedureById(id: string): Observable<Procedure | undefined> {
-    const item = this.procedures.find((p) => p.id === id);
-    return of(item).pipe(delay(100));
+    return this.simulation.respond(() => this.procedures.find((p) => p.id === id), 0.5);
   }
 
   updateStatus(id: string, newStatus: ProcedureStatus): Observable<Procedure> {
-    const currentIndex = this.procedures.findIndex((p) => p.id === id);
+    return this.simulation.respond(() => {
+      const current = this.requireProcedure(id);
 
-    if (currentIndex === -1) {
-      return throwError(() => new Error(`Procedure with id "${id}" not found.`));
+      if (!canTransitionProcedure(current.status, newStatus)) {
+        throw new Error(`Cannot transition from "${current.status}" to "${newStatus}"`);
+      }
+
+      return this.replace({ ...current, status: newStatus, updatedAt: new Date().toISOString() });
+    });
+  }
+
+  moveProcedure(id: string, operatingRoom: string, scheduledDate: string): Observable<Procedure> {
+    return this.simulation.respond(() => {
+      const current = this.requireProcedure(id);
+      const placement = canPlaceProcedure(this.procedures, current, operatingRoom, scheduledDate);
+
+      if (!placement.ok) {
+        throw new Error(placement.reason);
+      }
+
+      return this.replace({
+        ...current,
+        operatingRoom,
+        scheduledDate,
+        updatedAt: new Date().toISOString(),
+      });
+    });
+  }
+
+  reset(): void {
+    removeStorage(PROCEDURES_STORAGE_KEY);
+    this.procedures = [...INITIAL_PROCEDURES];
+  }
+
+  private requireProcedure(id: string): Procedure {
+    const procedure = this.procedures.find((p) => p.id === id);
+    if (!procedure) {
+      throw new Error(`Procedure with id "${id}" not found.`);
     }
+    return procedure;
+  }
 
-    const currentItem = this.procedures[currentIndex];
-
-    if (!canTransitionProcedure(currentItem.status, newStatus)) {
-      return throwError(
-        () => new Error(`Cannot transition from "${currentItem.status}" to "${newStatus}"`),
-      );
-    }
-
-    const updatedItem: Procedure = {
-      ...currentItem,
-      status: newStatus,
-      updatedAt: new Date().toISOString(),
-    };
-
-    this.procedures = this.procedures.map((item, index) =>
-      index === currentIndex ? updatedItem : item,
-    );
-
-    return of(updatedItem).pipe(delay(200));
+  private replace(updated: Procedure): Procedure {
+    this.procedures = this.procedures.map((item) => (item.id === updated.id ? updated : item));
+    saveStorage(PROCEDURES_STORAGE_KEY, this.procedures);
+    return updated;
   }
 }

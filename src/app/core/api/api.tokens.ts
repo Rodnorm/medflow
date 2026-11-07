@@ -9,12 +9,15 @@ export interface IProcedureApi {
   getProcedures(): Observable<readonly Procedure[]>;
   getProcedureById(id: string): Observable<Procedure | undefined>;
   updateStatus(id: string, newStatus: ProcedureStatus): Observable<Procedure>;
+  moveProcedure(id: string, operatingRoom: string, scheduledDate: string): Observable<Procedure>;
+  reset(): void;
 }
 
 export interface IInstrumentApi {
   getInstrumentSets(): Observable<readonly InstrumentSet[]>;
   getInstrumentSetById(id: string): Observable<InstrumentSet | undefined>;
   updateStatus(id: string, newStatus: InstrumentSetStatus): Observable<InstrumentSet>;
+  reset(): void;
 }
 
 export const PROCEDURE_API_TOKEN = new InjectionToken<IProcedureApi>('PROCEDURE_API_TOKEN', {

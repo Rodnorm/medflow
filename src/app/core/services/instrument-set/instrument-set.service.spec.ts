@@ -9,7 +9,8 @@ describe('InstrumentSet Service', () => {
         TestBed.configureTestingModule({
             providers: [InstrumentSetService]
         });
-        service = TestBed.inject(InstrumentSetService)
+        service = TestBed.inject(InstrumentSetService);
+        service.reset();
     });
 
 
@@ -41,5 +42,12 @@ describe('InstrumentSet Service', () => {
         await expect(firstValueFrom(service.updateStatus('ins-001', 'cleaning'))).rejects.toThrow();
     });
 
+    it('persists updates to localStorage and clears them on reset', async () => {
+        await firstValueFrom(service.updateStatus('ins-001', 'reserved'));
+        const stored = localStorage.getItem('medflow_instruments_v1');
+        expect(stored).toContain('"status":"reserved"');
 
+        service.reset();
+        expect(localStorage.getItem('medflow_instruments_v1')).toBeNull();
+    });
 });
