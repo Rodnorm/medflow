@@ -1,0 +1,57 @@
+<button
+  mat-icon-button
+  type="button"
+  class="simulation-trigger"
+  [class.active]="customized()"
+  [matMenuTriggerFor]="simulationMenu"
+  #trigger="matMenuTrigger"
+  aria-label="API simulation controls"
+>
+  <mat-icon>tune</mat-icon>
+</button>
+
+<mat-menu #simulationMenu="matMenu" xPosition="before" class="simulation-menu-panel">
+  <div
+    class="simulation-panel"
+    role="group"
+    aria-label="API simulation"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.key === 'Escape' ? trigger.closeMenu() : $event.stopPropagation()"
+  >
+    <div class="panel-header">
+      <span class="panel-title">API simulation</span>
+      <span class="panel-hint">Exercise loading and error states</span>
+    </div>
+
+    <div class="panel-row">
+      <label class="panel-label" for="latency-slider">
+        Latency
+        <span class="panel-value">{{ simulation.latencyMs() }} ms</span>
+      </label>
+      <mat-slider min="0" max="2000" step="100" class="latency-slider">
+        <input
+          matSliderThumb
+          id="latency-slider"
+          aria-label="Simulated latency in milliseconds"
+          [value]="simulation.latencyMs()"
+          (valueChange)="simulation.setLatency($event)"
+        />
+      </mat-slider>
+    </div>
+
+    <div class="panel-row">
+      <mat-slide-toggle
+        [checked]="simulation.forceFailures()"
+        (change)="simulation.setForceFailures($event.checked)"
+      >
+        Force API failures
+      </mat-slide-toggle>
+    </div>
+
+    <button mat-stroked-button type="button" class="reset-btn" (click)="resetDemo()">
+      <mat-icon>restart_alt</mat-icon>
+      Reset demo data
+    </button>
+  </div>
+</mat-menu>

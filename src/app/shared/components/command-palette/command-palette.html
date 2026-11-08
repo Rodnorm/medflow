@@ -1,0 +1,55 @@
+<div class="palette">
+  <div class="palette-search">
+    <mat-icon aria-hidden="true">search</mat-icon>
+    <input
+      #searchInput
+      cdkFocusInitial
+      class="palette-field"
+      type="text"
+      role="combobox"
+      aria-label="Search pages, procedures and instruments"
+      aria-autocomplete="list"
+      aria-expanded="true"
+      aria-controls="palette-results"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Search pages, procedures, instrument sets..."
+      [value]="query()"
+      [attr.aria-activedescendant]="results().length > 0 ? 'palette-option-' + activeIndex() : null"
+      (input)="onQuery($any($event.target).value)"
+      (keydown)="onKeydown($event)"
+    />
+    <kbd class="palette-kbd">Esc</kbd>
+  </div>
+
+  <ul id="palette-results" class="palette-results" role="listbox" aria-label="Results">
+    @for (item of results(); track item.id; let index = $index) {
+      <li
+        role="option"
+        tabindex="-1"
+        class="palette-option"
+        [id]="'palette-option-' + index"
+        [class.active]="index === activeIndex()"
+        [attr.aria-selected]="index === activeIndex()"
+        (click)="execute(item)"
+        (keydown.enter)="execute(item)"
+        (mouseenter)="activeIndex.set(index)"
+      >
+        <mat-icon class="option-icon" aria-hidden="true">{{ item.icon }}</mat-icon>
+        <span class="option-text">
+          <span class="option-label">{{ item.label }}</span>
+          <span class="option-description">{{ item.description }}</span>
+        </span>
+        <span class="option-group">{{ item.group }}</span>
+      </li>
+    } @empty {
+      <li class="palette-empty" role="presentation">No results for "{{ query() }}".</li>
+    }
+  </ul>
+
+  <div class="palette-footer" aria-hidden="true">
+    <span><kbd class="palette-kbd">&uarr;</kbd><kbd class="palette-kbd">&darr;</kbd> navigate</span>
+    <span><kbd class="palette-kbd">Enter</kbd> open</span>
+  </div>
+</div>
+

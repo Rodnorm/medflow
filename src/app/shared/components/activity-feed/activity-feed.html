@@ -1,0 +1,26 @@
+@if (items().length === 0) {
+  <app-empty-state icon="history" [message]="emptyMessage()" />
+} @else {
+  <ol class="feed" [class.compact]="compact()" aria-label="Activity feed">
+    @for (item of items(); track item.event.id) {
+      <li class="feed-item">
+        <span class="feed-icon" [attr.data-type]="item.event.type">
+          <mat-icon aria-hidden="true">{{ item.icon }}</mat-icon>
+        </span>
+        <div class="feed-body">
+          <div class="feed-title-row">
+            <span class="feed-title">{{ item.event.title }}</span>
+            <a class="feed-code" [routerLink]="item.link">{{ item.event.entityCode }}</a>
+          </div>
+          <p class="feed-description">{{ item.event.description }}</p>
+          <p class="feed-meta">{{ item.event.author }}</p>
+        </div>
+        <time class="feed-time" [attr.datetime]="item.event.timestamp">
+          <span class="feed-relative">{{ item.relative }}</span>
+          <span class="feed-clock">{{ item.event.timestamp | date: 'MMM d, HH:mm:ss' }}</span>
+        </time>
+      </li>
+    }
+  </ol>
+}
+

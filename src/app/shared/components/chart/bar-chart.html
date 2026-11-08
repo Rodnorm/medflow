@@ -1,0 +1,68 @@
+<figure class="bar-chart" [attr.aria-label]="title()">
+  <svg
+    class="chart-svg"
+    [attr.viewBox]="'0 0 ' + viewWidth + ' ' + viewHeight"
+    aria-hidden="true"
+    focusable="false"
+  >
+    @for (tick of ticks(); track tick.y) {
+      <line
+        class="grid-line"
+        [attr.x1]="gridBounds.left"
+        [attr.x2]="gridBounds.right"
+        [attr.y1]="tick.y"
+        [attr.y2]="tick.y"
+      />
+      <text class="axis-label" text-anchor="end" [attr.x]="gridBounds.left - 8" [attr.y]="tick.y + 3">
+        {{ tick.value }}
+      </text>
+    }
+
+    @for (bar of bars(); track bar.id) {
+      <g class="bar-group">
+        <rect
+          class="bar"
+          rx="4"
+          [attr.x]="bar.x"
+          [attr.y]="bar.y"
+          [attr.width]="bar.width"
+          [attr.height]="bar.height"
+          [attr.fill]="bar.color ?? 'var(--med-primary)'"
+        >
+          <title>{{ bar.label }}: {{ bar.value }}{{ unit() }}</title>
+        </rect>
+        @if (bar.showValue) {
+          <text class="value-label" text-anchor="middle" [attr.x]="bar.labelX" [attr.y]="bar.y - 5">
+            {{ bar.value }}{{ unit() }}
+          </text>
+        }
+        @if (bar.showLabel) {
+          <text class="axis-label" text-anchor="middle" [attr.x]="bar.labelX" [attr.y]="labelBaseline">
+            {{ bar.label }}
+          </text>
+        }
+      </g>
+    }
+  </svg>
+
+  <table class="sr-only">
+    <caption>
+      {{ title() }}
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (bar of bars(); track bar.id) {
+        <tr>
+          <th scope="row">{{ bar.label }}</th>
+          <td>{{ bar.value }}{{ unit() }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</figure>
+

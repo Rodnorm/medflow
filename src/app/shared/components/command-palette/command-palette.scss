@@ -1,0 +1,117 @@
+.palette {
+  display: flex;
+  flex-direction: column;
+  background: var(--med-surface-card);
+  color: var(--med-text-primary);
+}
+
+.palette-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--med-border-subtle);
+
+  mat-icon {
+    color: var(--med-text-muted);
+  }
+}
+
+.palette-field {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--med-text-primary);
+
+  &::placeholder {
+    color: var(--med-text-muted);
+  }
+}
+
+.palette-kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  margin-right: 4px;
+  border-radius: 4px;
+  border: 1px solid var(--med-border-subtle);
+  background: var(--med-surface-elevated);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--med-text-secondary);
+}
+
+.palette-results {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.palette-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+
+  &.active {
+    background: var(--med-primary-subtle);
+  }
+}
+
+.option-icon {
+  flex-shrink: 0;
+  color: var(--med-primary-dark);
+}
+
+.option-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.option-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.option-description {
+  font-size: 0.75rem;
+  color: var(--med-text-secondary);
+}
+
+.option-group {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--med-text-muted);
+}
+
+.palette-empty {
+  padding: 24px 12px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--med-text-secondary);
+}
+
+.palette-footer {
+  display: flex;
+  gap: 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--med-border-subtle);
+  font-size: 0.75rem;
+  color: var(--med-text-muted);
+}
+

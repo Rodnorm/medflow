@@ -1,0 +1,111 @@
+.feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feed-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--med-border-subtle);
+  background: var(--med-surface-elevated);
+}
+
+.feed-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--med-primary-subtle);
+  color: var(--med-primary-dark);
+
+  &[data-type='instrument_status_changed'] {
+    background: var(--med-purple-bg);
+    color: var(--med-purple);
+  }
+
+  &[data-type='procedure_rescheduled'] {
+    background: var(--med-warning-bg);
+    color: var(--med-warning);
+  }
+}
+
+.feed-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feed-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--med-text-primary);
+}
+
+.feed-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--med-primary-dark);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.feed-description {
+  margin: 2px 0 0;
+  font-size: 0.8125rem;
+  color: var(--med-text-secondary);
+}
+
+.feed-meta {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: var(--med-text-muted);
+}
+
+.feed-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
+}
+
+.feed-relative {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--med-text-secondary);
+}
+
+.feed-clock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--med-text-muted);
+}
+
+.compact {
+  gap: 8px;
+
+  .feed-item {
+    padding: 8px 12px;
+  }
+
+  .feed-meta,
+  .feed-clock {
+    display: none;
+  }
+}
+
