@@ -1,0 +1,126 @@
+@if (instrument(); as set) {
+  <div class="detail-container">
+    <a routerLink="/instruments" class="back-link">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      Back to Instruments
+    </a>
+
+    @if (error()) {
+      <div class="error-banner" role="alert">
+        <p>{{ error() }}</p>
+        <button mat-button type="button" (click)="retry()">Retry</button>
+      </div>
+    }
+
+    <header class="header-card">
+      <div class="header-main">
+        <div class="title-group">
+          <span class="code-badge">{{ set.code }}</span>
+          <h1 class="title">{{ set.name }}</h1>
+        </div>
+        <app-status-badge [status]="set.status" />
+      </div>
+      <div class="meta-row">
+        <div><strong>Location:</strong> {{ set.location }}</div>
+        <div><strong>Last updated:</strong> {{ set.updatedAt | date: 'MMM d, HH:mm' }}</div>
+        <div><strong>Upcoming cases:</strong> {{ upcoming().length }}</div>
+      </div>
+      <div class="transition-row">
+        @for (target of transitions(); track target) {
+          <button
+            mat-flat-button
+            type="button"
+            [color]="target === 'maintenance' ? 'warn' : 'primary'"
+            (click)="transition(target)"
+          >
+            Mark as {{ target }}
+          </button>
+        } @empty {
+          <span class="muted">No further transitions are available from this status.</span>
+        }
+      </div>
+    </header>
+
+    <div class="detail-grid">
+      <mat-card class="detail-card">
+        <h2 class="card-title">Upcoming reservations</h2>
+        @if (upcoming().length === 0) {
+          <app-empty-state
+            icon="event_available"
+            message="No upcoming reservations"
+            hint="Procedures that allocate this set will appear here."
+          />
+        } @else {
+          <ul class="procedure-list">
+            @for (procedure of upcoming(); track procedure.id) {
+              <li class="procedure-item">
+                <div>
+                  <a [routerLink]="['/procedures', procedure.id]" class="procedure-code">
+                    {{ procedure.code }}
+                  </a>
+                  <p class="procedure-title">{{ procedure.title }}</p>
+                  <p class="procedure-meta">
+                    {{ procedure.scheduledDate | date: 'MMM d, HH:mm' }} in {{ procedure.operatingRoom }}
+                  </p>
+                </div>
+                <app-status-badge [status]="procedure.status" />
+              </li>
+            }
+          </ul>
+        }
+      </mat-card>
+
+      <mat-card class="detail-card">
+        <h2 class="card-title">Usage history</h2>
+        @if (history().length === 0) {
+          <app-empty-state
+            icon="history"
+            message="No completed or cancelled cases"
+            hint="Finished procedures that used this set are listed here."
+          />
+        } @else {
+          <ul class="procedure-list">
+            @for (procedure of history(); track procedure.id) {
+              <li class="procedure-item">
+                <div>
+                  <a [routerLink]="['/procedures', procedure.id]" class="procedure-code">
+                    {{ procedure.code }}
+                  </a>
+                  <p class="procedure-title">{{ procedure.title }}</p>
+                  <p class="procedure-meta">
+                    {{ procedure.scheduledDate | date: 'MMM d, HH:mm' }} in {{ procedure.operatingRoom }}
+                  </p>
+                </div>
+                <app-status-badge [status]="procedure.status" />
+              </li>
+            }
+          </ul>
+        }
+      </mat-card>
+    </div>
+
+    <mat-card class="detail-card">
+      <h2 class="card-title">Activity</h2>
+      <app-activity-feed
+        [events]="events()"
+        [compact]="true"
+        emptyMessage="No status changes recorded for this set yet."
+      />
+    </mat-card>
+  </div>
+} @else if (loading()) {
+  <div class="state-block">
+    <mat-progress-spinner diameter="40" mode="indeterminate" />
+  </div>
+} @else {
+  <div class="state-block">
+    <app-empty-state
+      icon="inventory_2"
+      message="Instrument set not found"
+      hint="The requested set does not exist or could not be loaded."
+    >
+      <a mat-stroked-button routerLink="/instruments">Return to Instruments</a>
+    </app-empty-state>
+  </div>
+}
+

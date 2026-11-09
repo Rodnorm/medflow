@@ -1,0 +1,29 @@
+.activity-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filters-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--med-border-subtle);
+  background: var(--med-surface-card);
+  box-shadow: var(--med-shadow-card);
+
+  .search-field {
+    flex: 1 1 280px;
+  }
+}
+
+.result-count {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--med-text-secondary);
+}
+

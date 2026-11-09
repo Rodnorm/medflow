@@ -17,7 +17,15 @@ import {
 } from '../../core/store/procedures/procedures.selectors';
 import { ProceduresActions } from '../../core/store/procedures/procedures.action';
 import { DonutChartComponent, ChartSegment } from '../../shared/components/chart/donut-chart';
+import { BarChartComponent, BarDatum } from '../../shared/components/chart/bar-chart';
+import { ActivityFeedComponent } from '../../shared/components/activity-feed/activity-feed';
 import { ActivityStore } from '../../core/store/activity/activity.store';
+import {
+  collectRooms,
+  hourlyLoad,
+  resolveReferenceDay,
+  utilizationByRoom,
+} from '../../core/domain/schedule.rules';
 
 @Component({
   selector: 'app-overview',
@@ -34,6 +42,8 @@ import { ActivityStore } from '../../core/store/activity/activity.store';
     MetricCard,
     StatusBadge,
     DonutChartComponent,
+    BarChartComponent,
+    ActivityFeedComponent,
   ],
   templateUrl: './overview.html',
   styleUrl: './overview.scss',
@@ -118,6 +128,45 @@ export class OverviewComponent {
     return [...this.procedures()]
       .sort((a, b) => new Date(a.scheduledDate).getTime() - new Date(b.scheduledDate).getTime())
       .slice(0, 5);
+  });
+
+  readonly referenceDay = computed(() => resolveReferenceDay(this.procedures(), new Date()));
+
+  private readonly utilization = computed(() =>
+    utilizationByRoom(this.procedures(), collectRooms(this.procedures()), this.referenceDay()),
+  );
+
+  readonly averageUtilization = computed(() => {
+    const rooms = this.utilization();
+    return rooms.length === 0
+      ? 0
+      : Math.round(rooms.reduce((total, room) => total + room.percent, 0) / rooms.length);
+  });
+
+  readonly utilizationChartData = computed<readonly BarDatum[]>(() =>
+    this.utilization().map((room) => ({
+      id: room.room,
+      label: room.room,
+      value: room.percent,
+      color: room.percent >= 90 ? '#ef4444' : room.percent >= 70 ? '#f59e0b' : '#0284c7',
+    })),
+  );
+
+  readonly hourlyChartData = computed<readonly BarDatum[]>(() =>
+    hourlyLoad(this.procedures(), this.referenceDay()).map((count, hour) => ({
+      id: `hour-${hour}`,
+      label: String(hour).padStart(2, '0'),
+      value: count,
+      color: '#6366f1',
+    })),
+  );
+
+  readonly peakHour = computed<BarDatum | null>(() => {
+    const peak = this.hourlyChartData().reduce<BarDatum | null>(
+      (best, datum) => (best === null || datum.value > best.value ? datum : best),
+      null,
+    );
+    return peak && peak.value > 0 ? peak : null;
   });
 
   constructor() {

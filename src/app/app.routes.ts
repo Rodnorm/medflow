@@ -11,6 +11,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/overview/overview').then((m) => m.OverviewComponent),
   },
   {
+    path: 'instruments/:id',
+    loadComponent: () =>
+      import('./features/instruments/instrument-detail/instrument-detail').then(
+        (m) => m.InstrumentDetailComponent,
+      ),
+  },
+  {
     path: 'instruments',
     loadComponent: () =>
       import('./features/instruments/instrument-list/instrument-list').then(
@@ -21,6 +28,11 @@ export const routes: Routes = [
     path: 'schedule',
     loadComponent: () =>
       import('./features/schedule/or-schedule').then((m) => m.OrScheduleComponent),
+  },
+  {
+    path: 'activity',
+    loadComponent: () =>
+      import('./features/activity/activity-page').then((m) => m.ActivityPageComponent),
   },
   {
     path: 'procedures/:id',

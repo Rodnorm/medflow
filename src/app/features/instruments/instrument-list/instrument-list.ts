@@ -9,12 +9,13 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { InstrumentSetService } from "../../../core/services/instrument-set/instrument-set.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { StatusBadge } from "../../../shared/components/status-badge/status-badge";
 import { InstrumentsStore } from "../../../core/store/instruments/instruments.store";
+import { PageHeaderComponent } from "../../../shared/components/page-header/page-header";
+import { EmptyStateComponent } from "../../../shared/components/empty-state/empty-state";
 
 export type InstrumentStatusFilter = 'all' | InstrumentSetStatus;
 
@@ -23,6 +24,9 @@ export type InstrumentStatusFilter = 'all' | InstrumentSetStatus;
     imports: [
         DatePipe,
         StatusBadge,
+        RouterLink,
+        PageHeaderComponent,
+        EmptyStateComponent,
         MatMenuModule,
         MatTableModule,
         MatInputModule,
@@ -37,7 +41,6 @@ export type InstrumentStatusFilter = 'all' | InstrumentSetStatus;
 })
 export class InstrumentListComponent {
     readonly store = inject(InstrumentsStore);
-    private readonly instrumentService = inject(InstrumentSetService);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
 

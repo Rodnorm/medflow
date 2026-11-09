@@ -1,0 +1,39 @@
+<div class="activity-page">
+  <app-page-header
+    title="Activity Log"
+    subtitle="Every status change and reschedule recorded during this session."
+  />
+
+  <div class="filters-bar">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
+      <mat-label>Search activity</mat-label>
+      <input
+        matInput
+        placeholder="Code, title, author..."
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+    </mat-form-field>
+
+    <mat-button-toggle-group
+      aria-label="Filter activity by entity"
+      hideSingleSelectionIndicator
+      [value]="typeFilter()"
+      (change)="typeFilter.set($event.value)"
+    >
+      <mat-button-toggle value="all">All</mat-button-toggle>
+      <mat-button-toggle value="procedure">Procedures</mat-button-toggle>
+      <mat-button-toggle value="instrument">Instruments</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <span class="result-count" aria-live="polite">
+      {{ filteredEvents().length }} of {{ totalCount() }} events
+    </span>
+  </div>
+
+  <app-activity-feed
+    [events]="filteredEvents()"
+    emptyMessage="No activity matches the current filters."
+  />
+</div>
+

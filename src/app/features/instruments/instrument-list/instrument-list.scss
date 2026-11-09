@@ -140,3 +140,17 @@
   color: var(--med-text-muted);
   padding-left: 12px;
 }
+
+
+.code-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--med-primary-dark);
+  text-decoration: none;
+  font-size: 0.8125rem;
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--med-primary);
+  }
+}

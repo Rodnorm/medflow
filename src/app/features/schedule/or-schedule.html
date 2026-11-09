@@ -1,8 +1,40 @@
 <div class="schedule-page">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Operating Room Schedule</h1>
-      <p class="page-subtitle">24-hour surgical theater timeline with live operational tracking.</p>
+  <app-page-header
+    title="Operating Room Schedule"
+    subtitle="24-hour surgical theater timeline with drag-and-drop rescheduling."
+  >
+    <div class="day-nav" role="group" aria-label="Choose schedule day">
+      <button mat-icon-button type="button" aria-label="Previous day" (click)="shiftDay(-1)">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="day-field">
+        <mat-label>Day</mat-label>
+        <input
+          matInput
+          [matDatepicker]="dayPicker"
+          [value]="selectedDate()"
+          (dateChange)="onDatePicked($event.value)"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="dayPicker" />
+        <mat-datepicker #dayPicker />
+      </mat-form-field>
+      <button mat-icon-button type="button" aria-label="Next day" (click)="shiftDay(1)">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button mat-stroked-button type="button" (click)="goToToday()">Today</button>
+    </div>
+  </app-page-header>
+
+  <div class="schedule-toolbar">
+    <div class="day-summary" aria-live="polite">
+      <span class="summary-chip">{{ selectedDate() | date: 'EEEE, MMM d, y' }}</span>
+      <span class="summary-chip">{{ dayProcedures().length }} procedures</span>
+      @if (conflictCount() > 0) {
+        <span class="summary-chip conflict-chip">
+          <mat-icon>warning</mat-icon>
+          {{ conflictCount() }} in conflict
+        </span>
+      }
     </div>
     <div class="legend-pills">
       <span class="pill planned">Planned</span>
@@ -11,6 +43,25 @@
       <span class="pill cancelled">Cancelled</span>
     </div>
   </div>
+
+  <p class="schedule-hint">
+    Drag a planned block to another time or theater, or focus it and press Shift + arrow keys.
+    Moves that overlap another procedure are rejected.
+  </p>
+
+  @if (error()) {
+    <div class="error-banner" role="alert">
+      <p>{{ error() }}</p>
+      <button mat-button type="button" (click)="dismissError()">Dismiss</button>
+    </div>
+  }
+
+  @if (dayProcedures().length === 0) {
+    <p class="empty-day" role="status">No procedures are scheduled for this day.</p>
+  }
+
+  <p class="sr-only" aria-live="polite">{{ announcement() }}</p>
+
   <div class="timeline-container">
     <div class="timeline-header">
       <div class="room-column-header">Operating Theater</div>
@@ -23,28 +74,53 @@
       </div>
     </div>
     <div class="rooms-container">
-      <div class="now-line" [style.left.%]="nowPositionPercent()" title="Current Time Indicator">
-        <span class="now-badge">{{ currentTime() | date: 'HH:mm' }}</span>
-      </div>
-      @for (room of operatingRooms; track room) {
+      @if (isToday()) {
+        <div class="now-layer">
+          <div class="now-line" [style.left.%]="nowPositionPercent()" title="Current Time Indicator">
+            <span class="now-badge">{{ currentTime() | date: 'HH:mm' }}</span>
+          </div>
+        </div>
+      }
+      @for (row of rows(); track row.room) {
         <div class="room-row">
           <div class="room-label">
-            <span class="room-badge">{{ room }}</span>
+            <span class="room-badge">{{ row.room }}</span>
           </div>
           <div class="room-track">
-            @for (proc of getProceduresForRoom(room); track proc.id) {
+            @for (block of row.blocks; track block.procedure.id) {
               <button
+                cdkDrag
+                cdkDragBoundary=".rooms-container"
                 type="button"
                 class="schedule-block"
-                [ngClass]="proc.status"
-                [style.left.%]="getBlockPosition(proc).left"
-                [style.width.%]="getBlockPosition(proc).width"
-                (click)="openManageDialog(proc)"
-                [attr.aria-label]="proc.title + ' in ' + room"
+                [cdkDragDisabled]="!block.movable"
+                [class.movable]="block.movable"
+                [class.conflict]="block.overlapping"
+                [attr.data-status]="block.procedure.status"
+                [style.left.%]="block.left"
+                [style.width.%]="block.width"
+                [attr.aria-label]="
+                  block.procedure.code +
+                  ', ' +
+                  block.procedure.title +
+                  ' in ' +
+                  row.room +
+                  (block.overlapping ? ', conflicts with another procedure' : '') +
+                  (block.movable ? '. Shift plus arrow keys to reschedule.' : '')
+                "
+                (cdkDragStarted)="onDragStarted()"
+                (cdkDragEnded)="onDragEnded($event, block)"
+                (click)="onBlockClick(block.procedure)"
+                (keydown)="onBlockKeydown($event, block.procedure)"
               >
-                <span class="block-code">{{ proc.code }}</span>
-                <span class="block-title">{{ proc.title }}</span>
-                <span class="block-time">{{ proc.scheduledDate | date: 'HH:mm' }}</span>
+                <span class="block-code">
+                  {{ block.procedure.code }}
+                  @if (block.overlapping) {
+                    <mat-icon class="block-warning" aria-hidden="true">warning</mat-icon>
+                  }
+                </span>
+                <span class="block-title">{{ block.procedure.title }}</span>
+                <span class="block-time">{{ block.procedure.scheduledDate | date: 'HH:mm' }}</span>
               </button>
             }
           </div>

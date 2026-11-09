@@ -79,6 +79,51 @@
     }
   </section>
 
+  <section class="charts-section" aria-label="Capacity and throughput analytics">
+    @defer (on viewport) {
+      <mat-card class="chart-card">
+        <div class="chart-header">
+          <h3>Theater Utilisation</h3>
+          <span class="chart-total">
+            {{ averageUtilization() }}% average on {{ referenceDay() | date: 'MMM d' }}
+          </span>
+        </div>
+
+        <app-bar-chart
+          title="Theater utilisation by operating room"
+          unit="%"
+          [maxValue]="100"
+          [data]="utilizationChartData()"
+        />
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <div class="chart-header">
+          <h3>Case Load by Start Hour</h3>
+          <span class="chart-total">
+            @if (peakHour(); as peak) {
+              Peak at {{ peak.label }}:00 ({{ peak.value }})
+            } @else {
+              No cases scheduled
+            }
+          </span>
+        </div>
+
+        <app-bar-chart
+          title="Procedures starting per hour"
+          [labelEvery]="3"
+          [data]="hourlyChartData()"
+        />
+      </mat-card>
+    } @placeholder {
+      <div
+        style="min-height: 220px; display: flex; align-items: center; justify-content: center; grid-column: 1 / -1;"
+      >
+        <mat-progress-spinner diameter="36" mode="indeterminate" />
+      </div>
+    }
+  </section>
+
   <section class="recent-section" aria-labelledby="recent-title">
     <mat-card>
       <div class="recent-header">
@@ -141,49 +186,19 @@
     </mat-card>
   </section>
 
-  <section class="activity-section" style="margin-top: 24px">
-    <mat-card style="padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0">
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 16px;
-        "
-      >
-        <h3 style="margin: 0; font-weight: 800; font-size: 1.125rem">Live Activity Feed</h3>
-        <span style="font-size: 0.75rem; color: #16a34a; font-weight: 600"
-          >&bull; Synchronized</span
-        >
+  <section class="activity-section" aria-labelledby="activity-title">
+    <mat-card class="activity-card">
+      <div class="activity-header">
+        <h3 id="activity-title" class="activity-title">Live Activity Feed</h3>
+        <a mat-button color="primary" routerLink="/activity" class="view-all-link">
+          Full Activity Log &rarr;
+        </a>
       </div>
-      <div class="feed-list" style="display: flex; flex-direction: column; gap: 12px">
-        @for (act of recentActivities(); track act.id) {
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 10px 14px;
-              background: #f8fafc;
-              border-radius: 8px;
-              border: 1px solid #f1f5f9;
-            "
-          >
-            <div style="display: flex; flex-direction: column; gap: 2px">
-              <span style="font-weight: 700; font-size: 0.8125rem; color: #0f172a"
-                >{{ act.title }} ({{ act.entityCode }})</span
-              >
-              <span style="font-size: 0.75rem; color: #475569"
-                >{{ act.description }} &bull; {{ act.author }}</span
-              >
-            </div>
-            <span
-              style="font-size: 0.6875rem; color: #64748b; font-family: 'JetBrains Mono', monospace"
-              >{{ act.timestamp | date: 'HH:mm:ss' }}</span
-            >
-          </div>
-        }
-      </div>
+      <app-activity-feed
+        [events]="recentActivities()"
+        [compact]="true"
+        emptyMessage="Status changes will appear here as they happen."
+      />
     </mat-card>
   </section>
 </div>
