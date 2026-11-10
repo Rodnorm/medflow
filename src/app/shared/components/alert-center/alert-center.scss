@@ -1,3 +1,16 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+
+  button {
+    color: #e2e8f0 !important;
+
+    &:hover {
+      color: #ffffff !important;
+    }
+  }
+}
+
 .alerts-header {
   display: flex;
   justify-content: space-between;

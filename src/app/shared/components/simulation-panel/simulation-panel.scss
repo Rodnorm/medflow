@@ -1,5 +1,18 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+
+  button {
+    color: #e2e8f0 !important;
+
+    &:hover {
+      color: #ffffff !important;
+    }
+  }
+}
+
 .simulation-trigger.active {
-  color: #f59e0b !important;
+  color: #fbbf24 !important;
 }
 
 .simulation-panel {
