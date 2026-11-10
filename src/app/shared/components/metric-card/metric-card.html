@@ -1,24 +1,23 @@
-<mat-card class="metric-card" [class.metric-card--clickable]="!!route()">
+<mat-card class="metric-card" [class.metric-card--clickable]="!!route()" [routerLink]="route()">
   <mat-card-header>
     <mat-card-title class="metric-title">{{ title() }}</mat-card-title>
   </mat-card-header>
 
   <mat-card-content class="metric-content">
     @if (loading()) {
-      <div class="metric-loading" aria-label="Loading metric">
-        <mat-progress-spinner diameter="32" mode="indeterminate" />
-      </div>
+    <div class="metric-loading" aria-label="Loading metric">
+      <mat-progress-spinner diameter="32" mode="indeterminate" />
+    </div>
     } @else {
-      <div class="metric-value">{{ value() }}</div>
-      @if (hint()) {
-        <p class="metric-hint">{{ hint() }}</p>
-      }
-      @if (route()) {
-        <a [routerLink]="route()" class="metric-link" [attr.aria-label]="'View details for ' + title()">
-          View details &rarr;
-        </a>
-      }
+    <div class="metric-value">{{ value() }}</div>
+    @if (hint()) {
+    <p class="metric-hint">{{ hint() }}</p>
+    }
+    @if (route()) {
+    <a class="metric-link" [attr.aria-label]="'View details for ' + title()">
+      View details &rarr;
+    </a>
+    }
     }
   </mat-card-content>
 </mat-card>
-
