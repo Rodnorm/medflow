@@ -325,6 +325,29 @@ html.dark-theme {
   }
 }
 
+.command-palette-panel .mat-mdc-dialog-surface {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--med-shadow-modal);
+}
+
+.simulation-menu-panel .mat-mdc-menu-content {
+  padding: 0;
+}
+
+.alert-menu-panel {
+  max-width: 440px !important;
+  width: min(440px, calc(100vw - 24px)) !important;
+
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+}
+
+html.dark-theme .alert-menu-panel .action-link {
+  background: #1e293b !important;
+  color: #38bdf8 !important;
+}
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.12s;

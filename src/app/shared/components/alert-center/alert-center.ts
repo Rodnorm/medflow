@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { ConflictService } from '../../../core/services/conflict/conflict.service';
 
 @Component({
@@ -13,4 +14,10 @@ import { ConflictService } from '../../../core/services/conflict/conflict.servic
 })
 export class AlertCenterComponent {
   readonly conflictService = inject(ConflictService);
+  private readonly router = inject(Router);
+
+  navigateTo(path: string | string[], trigger: MatMenuTrigger): void {
+    trigger.closeMenu();
+    this.router.navigate(Array.isArray(path) ? path : [path]);
+  }
 }

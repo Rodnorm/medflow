@@ -1,6 +1,7 @@
 <button
   mat-icon-button
   [matMenuTriggerFor]="alertMenu"
+  #trigger="matMenuTrigger"
   [matBadge]="conflictService.totalAlertsCount()"
   [matBadgeHidden]="conflictService.totalAlertsCount() === 0"
   matBadgeColor="warn"
@@ -10,7 +11,12 @@
 </button>
 
 <mat-menu #alertMenu="matMenu" xPosition="before" class="alert-menu-panel">
-  <div class="alerts-container" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="-1">
+  <div
+    class="alerts-container"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.key === 'Escape' ? trigger.closeMenu() : $event.stopPropagation()"
+    tabindex="-1"
+  >
     <div class="alerts-header">
       <span class="title">Operational Conflicts</span>
       <span class="count-pill">{{ conflictService.totalAlertsCount() }} active</span>
@@ -35,6 +41,39 @@
             <div class="alert-content">
               <span class="alert-title">{{ alert.title }}</span>
               <p class="alert-message">{{ alert.message }}</p>
+              <div class="alert-actions">
+                <button
+                  mat-button
+                  type="button"
+                  class="action-link"
+                  (click)="navigateTo(['/procedures', alert.procedureId], trigger)"
+                >
+                  <mat-icon>open_in_new</mat-icon>
+                  View Case
+                </button>
+                @if (alert.type === 'instrument-unready' && alert.instrumentSetId) {
+                  <button
+                    mat-button
+                    type="button"
+                    class="action-link"
+                    (click)="navigateTo(['/instruments', alert.instrumentSetId], trigger)"
+                  >
+                    <mat-icon>medical_services</mat-icon>
+                    View Set
+                  </button>
+                }
+                @if (alert.type === 'room-overlap') {
+                  <button
+                    mat-button
+                    type="button"
+                    class="action-link"
+                    (click)="navigateTo('/schedule', trigger)"
+                  >
+                    <mat-icon>calendar_month</mat-icon>
+                    Open Schedule
+                  </button>
+                }
+              </div>
             </div>
           </div>
         }

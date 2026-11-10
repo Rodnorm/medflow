@@ -1,0 +1,112 @@
+<button
+  mat-stroked-button
+  type="button"
+  class="info-trigger"
+  (click)="open()"
+  aria-label="About MedFlow Application"
+>
+  <mat-icon class="info-icon">info</mat-icon>
+  <span class="trigger-label">About</span>
+</button>
+
+<dialog
+  #infoDialog
+  class="app-info-dialog"
+  aria-labelledby="app-info-title"
+  aria-describedby="app-info-desc"
+  tabindex="-1"
+  (keydown.escape)="close()"
+  (click)="onBackdropClick($event)"
+>
+  <div class="drawer-container">
+    <header class="drawer-header">
+      <div class="header-titles">
+        <div class="telemetry-tag">
+          <mat-icon class="terminal-icon">terminal</mat-icon>
+          <span>CLINICAL_OS // OR_ORCHESTRATION</span>
+        </div>
+        <h2 id="app-info-title" class="drawer-title">MedFlow Dashboard</h2>
+      </div>
+      <button
+        mat-icon-button
+        type="button"
+        class="close-button"
+        (click)="close()"
+        aria-label="Close application information drawer"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <div class="drawer-body">
+      <p id="app-info-desc" class="description">
+        Portfolio-grade healthcare operations dashboard coordinating surgical suites, clinical
+        workflows, and sterile processing assets. Built with Angular 22, Angular Signals, and modern NgRx.
+      </p>
+
+      <div class="meta-grid">
+        <div class="meta-card">
+          <span class="meta-label">Category</span>
+          <span class="meta-value">Healthcare Operations / OR Logistics</span>
+        </div>
+        <div class="meta-card">
+          <span class="meta-label">Status</span>
+          <span class="meta-value status-completed">Production Ready</span>
+        </div>
+      </div>
+
+      <section class="section">
+        <h3 class="section-title">
+          <span class="prefix">//</span> What the application does
+        </h3>
+        <ul class="feature-list">
+          @for (item of whatItDoes; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+
+      <section class="section">
+        <h3 class="section-title">
+          <span class="prefix">//</span> How to test and interact
+        </h3>
+        <ol class="steps-list">
+          @for (step of howToUse; track step) {
+            <li>{{ step }}</li>
+          }
+        </ol>
+      </section>
+
+      <section class="section">
+        <h3 class="section-title">
+          <span class="prefix">//</span> Core Architecture & Technologies
+        </h3>
+        <div class="tech-chips">
+          @for (tech of technologies; track tech) {
+            <span class="tech-chip">{{ tech }}</span>
+          }
+        </div>
+      </section>
+
+      <section class="section shortcuts-section">
+        <h3 class="section-title">
+          <span class="prefix">//</span> Productivity Shortcuts
+        </h3>
+        <div class="shortcuts-grid">
+          <div class="shortcut-row">
+            <kbd class="key">Ctrl + K</kbd>
+            <span class="shortcut-desc">Open global command palette</span>
+          </div>
+          <div class="shortcut-row">
+            <kbd class="key">Shift + ← / →</kbd>
+            <span class="shortcut-desc">Reschedule selected block on timeline by ±15 min</span>
+          </div>
+          <div class="shortcut-row">
+            <kbd class="key">Esc</kbd>
+            <span class="shortcut-desc">Close dialogs, menus, and side drawers</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</dialog>

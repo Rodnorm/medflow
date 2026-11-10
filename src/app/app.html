@@ -29,8 +29,23 @@
         <span class="material-symbols-outlined nav-icon">calendar_month</span>
         Schedule
       </a>
+      <a mat-button routerLink="/activity" routerLinkActive="active-link" class="nav-link">
+        <span class="material-symbols-outlined nav-icon">history</span>
+        Activity
+      </a>
     </nav>
     <div style="margin-left: auto; display: flex; align-items: center; gap: 12px">
+      <button
+        type="button"
+        class="palette-trigger"
+        aria-label="Open command palette"
+        aria-keyshortcuts="Control+K"
+        (click)="commandPalette.open()"
+      >
+        <mat-icon aria-hidden="true">search</mat-icon>
+        <span class="palette-label">Search</span>
+        <kbd class="palette-hint">Ctrl K</kbd>
+      </button>
       <button
         type="button"
         class="live-pill"
@@ -66,7 +81,9 @@
           themeService.currentTheme() === 'dark' ? 'light_mode' : 'dark_mode'
         }}</mat-icon>
       </button>
+      <app-simulation-panel />
       <app-alert-center />
+      <app-info-drawer />
     </div>
   </mat-toolbar>
 </header>
