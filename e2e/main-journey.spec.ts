@@ -61,8 +61,9 @@ test.describe('MedFlow — Operational Dashboard Main Journey', () => {
     await expect(page).toHaveURL(/.*schedule/);
     await expect(page.locator('.page-title')).toContainText('Operating Room Schedule');
     await expect(page.locator('.timeline-container')).toBeVisible();
+    await page.getByRole('button', { name: 'Today' }).click();
     await expect(page.locator('.now-line')).toBeVisible();
-    await expect(page.locator('.room-row')).toHaveCount(6);
+    await expect(page.locator('.room-row')).toHaveCount(10);
 
     await nav.getByRole('link', { name: /Instruments/i }).click();
     await expect(page).toHaveURL(/.*instruments/);
