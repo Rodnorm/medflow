@@ -21,6 +21,10 @@
     font-weight: 800;
     letter-spacing: -0.03em;
     color: var(--med-text-primary);
+
+    @media (max-width: 640px) {
+      font-size: 1.5rem;
+    }
   }
 
   .demo-badge {
@@ -46,6 +50,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 18px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
 }
 
 .charts-section {
@@ -62,6 +71,10 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+
+    @media (max-width: 640px) {
+      padding: 16px;
+    }
   }
 
   .chart-header {
@@ -160,6 +173,16 @@
 .recent-section {
   .mat-mdc-card {
     padding: 24px;
+
+    @media (max-width: 640px) {
+      padding: 16px;
+    }
+  }
+
+  .mat-mdc-card-content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
   }
 
   .recent-header {
@@ -186,6 +209,7 @@
 
 .recent-table {
   width: 100%;
+  min-width: 480px;
 }
 
 .code-cell {

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,11 +36,31 @@ export class App {
   readonly themeService = inject(ThemeService);
   readonly realtimeService = inject(RealtimeService);
   readonly commandPalette = inject(CommandPaletteService);
+  readonly mobileNavRef = viewChild<ElementRef<HTMLDialogElement>>('mobileNavDialog');
 
   onWindowKeydown(event: KeyboardEvent): void {
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
       this.commandPalette.open();
     }
+  }
+
+  openMobileNav(): void {
+    this.mobileNavRef()?.nativeElement.showModal();
+  }
+
+  closeMobileNav(): void {
+    this.mobileNavRef()?.nativeElement.close();
+  }
+
+  onMobileNavBackdrop(event: MouseEvent): void {
+    if (event.target === this.mobileNavRef()?.nativeElement) {
+      this.closeMobileNav();
+    }
+  }
+
+  openPaletteFromMobile(): void {
+    this.closeMobileNav();
+    this.commandPalette.open();
   }
 }

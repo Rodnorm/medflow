@@ -49,12 +49,16 @@
   border-radius: 12px;
   border: 1px solid var(--med-border-subtle);
   box-shadow: var(--med-shadow-card);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 100%;
   min-height: 280px;
 }
 
 .instruments-table {
   width: 100%;
+  min-width: 600px;
 }
 
 .code-cell {
@@ -152,5 +156,18 @@
   &:hover {
     text-decoration: underline;
     color: var(--med-primary);
+  }
+}
+
+@media (max-width: 768px) {
+  .filters-bar {
+    padding: 12px;
+    gap: 10px;
+
+    .search-field,
+    .status-field {
+      flex: 1 1 100%;
+      width: 100%;
+    }
   }
 }

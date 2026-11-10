@@ -35,10 +35,10 @@
     </div>
   }
 
-  <div class="table-container">
+  <div class="table-container" tabindex="0" role="region" aria-label="Sterile instruments tracking table">
     @if (this.store.loading() && this.store.instruments().length === 0) {
       <div class="loading-shade">
-        <mat-progress-spinner diameter="44" mode="indeterminate" />
+        <mat-progress-spinner diameter="44" mode="indeterminate" aria-label="Loading instruments" />
       </div>
     } @else if (this.store.filteredInstruments().length === 0) {
       <app-empty-state

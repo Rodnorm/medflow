@@ -1,9 +1,21 @@
 <header class="app-header">
   <mat-toolbar>
-    <div class="brand-group">
-      <span class="material-symbols-outlined brand-icon">vital_signs</span>
-      <span class="brand-title">{{ title() }}</span>
-      <span class="env-pill">DEMO &bull; CLINICAL OPS</span>
+    <div class="toolbar-left">
+      <button
+        mat-icon-button
+        type="button"
+        class="mobile-menu-trigger"
+        aria-label="Open navigation menu"
+        (click)="openMobileNav()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <div class="brand-group">
+        <span class="material-symbols-outlined brand-icon">vital_signs</span>
+        <span class="brand-title">{{ title() }}</span>
+        <span class="env-pill">DEMO &bull; CLINICAL OPS</span>
+      </div>
     </div>
 
     <nav aria-label="Main navigation" class="app-nav">
@@ -34,7 +46,7 @@
         Activity
       </a>
     </nav>
-    <div style="margin-left: auto; display: flex; align-items: center; gap: 12px">
+    <div class="toolbar-right">
       <button
         type="button"
         class="palette-trigger"
@@ -87,6 +99,102 @@
     </div>
   </mat-toolbar>
 </header>
+
+<dialog
+  #mobileNavDialog
+  class="mobile-nav-dialog"
+  aria-label="Mobile Navigation Menu"
+  tabindex="-1"
+  (keydown.escape)="closeMobileNav()"
+  (click)="onMobileNavBackdrop($event)"
+>
+  <div class="mobile-drawer-content" tabindex="0" role="region" aria-label="Mobile navigation">
+    <div class="mobile-drawer-header">
+      <div class="brand-group">
+        <span class="material-symbols-outlined brand-icon">vital_signs</span>
+        <span class="brand-title">MedFlow</span>
+      </div>
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Close navigation menu"
+        (click)="closeMobileNav()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="mobile-drawer-actions">
+      <button
+        type="button"
+        class="mobile-search-btn"
+        (click)="openPaletteFromMobile()"
+        aria-label="Search or jump to route"
+      >
+        <mat-icon>search</mat-icon>
+        <span>Search / Command Palette</span>
+        <kbd>Ctrl K</kbd>
+      </button>
+    </div>
+
+    <nav aria-label="Mobile Navigation" class="mobile-nav-links">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMobileNav()"
+        class="mobile-nav-item"
+      >
+        <mat-icon>dashboard</mat-icon>
+        <span>Operations Overview</span>
+      </a>
+      <a
+        routerLink="/procedures"
+        routerLinkActive="active"
+        (click)="closeMobileNav()"
+        class="mobile-nav-item"
+      >
+        <mat-icon>local_hospital</mat-icon>
+        <span>Procedure Worklist</span>
+      </a>
+      <a
+        routerLink="/instruments"
+        routerLinkActive="active"
+        (click)="closeMobileNav()"
+        class="mobile-nav-item"
+      >
+        <mat-icon>precision_manufacturing</mat-icon>
+        <span>Sterile Instruments</span>
+      </a>
+      <a
+        routerLink="/schedule"
+        routerLinkActive="active"
+        (click)="closeMobileNav()"
+        class="mobile-nav-item"
+      >
+        <mat-icon>calendar_month</mat-icon>
+        <span>OR Daily Schedule</span>
+      </a>
+      <a
+        routerLink="/activity"
+        routerLinkActive="active"
+        (click)="closeMobileNav()"
+        class="mobile-nav-item"
+      >
+        <mat-icon>history</mat-icon>
+        <span>Clinical Activity Log</span>
+      </a>
+    </nav>
+
+    <div class="mobile-drawer-footer">
+      <div class="mobile-status-pill">
+        <span class="pulse-dot" [class.paused]="!realtimeService.isSimulationActive()"></span>
+        <span>Realtime Feed: {{ realtimeService.isSimulationActive() ? 'Active' : 'Paused' }}</span>
+      </div>
+      <span class="mobile-env-note">MedFlow &bull; Clinical OS Portfolio</span>
+    </div>
+  </div>
+</dialog>
 
 <main class="app-main">
   <router-outlet />

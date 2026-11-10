@@ -178,10 +178,16 @@
     </div>
   }
 
-  <div class="table-container" [class.density-compact]="preferences.density() === 'compact'">
+  <div
+    class="table-container"
+    tabindex="0"
+    role="region"
+    aria-label="Procedures worklist table"
+    [class.density-compact]="preferences.density() === 'compact'"
+  >
     @if (loading() && rawProcedures().length === 0) {
       <div class="loading-shade">
-        <mat-progress-spinner diameter="44" mode="indeterminate" />
+        <mat-progress-spinner diameter="44" mode="indeterminate" aria-label="Loading procedures" />
       </div>
     } @else if (filteredProcedures().length === 0) {
       <app-empty-state

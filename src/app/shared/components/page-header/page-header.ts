@@ -30,6 +30,10 @@ import { Component, input } from '@angular/core';
       font-weight: 800;
       letter-spacing: -0.03em;
       color: var(--med-text-primary);
+
+      @media (max-width: 640px) {
+        font-size: 1.5rem;
+      }
     }
 
     .page-subtitle {

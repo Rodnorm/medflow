@@ -74,7 +74,7 @@
       </mat-card>
     } @placeholder {
       <div style="min-height: 220px; display: flex; align-items: center; justify-content: center; grid-column: 1 / -1;">
-        <mat-progress-spinner diameter="36" mode="indeterminate" />
+        <mat-progress-spinner diameter="36" mode="indeterminate" aria-label="Loading distribution charts" />
       </div>
     }
   </section>
@@ -119,7 +119,7 @@
       <div
         style="min-height: 220px; display: flex; align-items: center; justify-content: center; grid-column: 1 / -1;"
       >
-        <mat-progress-spinner diameter="36" mode="indeterminate" />
+        <mat-progress-spinner diameter="36" mode="indeterminate" aria-label="Loading capacity charts" />
       </div>
     }
   </section>
@@ -133,10 +133,10 @@
         >
       </div>
 
-      <mat-card-content>
+      <mat-card-content tabindex="0" role="region" aria-label="Upcoming procedures list">
         @if (loading()) {
           <div class="section-loading">
-            <mat-progress-spinner diameter="40" mode="indeterminate" />
+            <mat-progress-spinner diameter="40" mode="indeterminate" aria-label="Loading recent procedures" />
           </div>
         } @else if (recentProcedures().length === 0) {
           <p class="empty-state">No scheduled procedures found.</p>
