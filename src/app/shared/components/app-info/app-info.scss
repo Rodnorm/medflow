@@ -45,8 +45,10 @@
   border: none;
   background: transparent;
   color: inherit;
-  overflow: hidden;
+  overflow: hidden !important;
+  overflow-x: hidden !important;
   box-shadow: -10px 0 35px rgba(15, 23, 42, 0.35);
+  box-sizing: border-box;
 
   &::backdrop {
     background: rgba(15, 23, 42, 0.65);
@@ -73,23 +75,38 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  max-width: 100%;
   background-color: var(--med-surface-card);
   color: var(--med-text-primary);
   border-left: 1px solid var(--med-border-subtle);
   overflow-y: auto;
+  overflow-x: hidden !important;
+  box-sizing: border-box;
 }
 
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 24px 24px 16px;
+  gap: 12px;
+  padding: 20px 20px 16px;
   border-bottom: 1px solid var(--med-border-subtle);
   background: var(--med-surface-elevated);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.header-titles {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .telemetry-tag {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -98,11 +115,14 @@
   color: var(--med-primary);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  flex-wrap: wrap;
+  word-break: break-all;
 
   .terminal-icon {
     font-size: 14px;
     width: 14px;
     height: 14px;
+    flex-shrink: 0;
   }
 }
 
@@ -112,10 +132,13 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--med-text-primary);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .close-button {
   color: var(--med-text-secondary);
+  flex-shrink: 0;
 
   &:hover {
     color: var(--med-text-primary);
@@ -124,10 +147,13 @@
 }
 
 .drawer-body {
-  padding: 20px 24px 36px;
+  padding: 20px 20px 36px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .description {
@@ -135,12 +161,18 @@
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--med-text-secondary);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .meta-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
@@ -155,6 +187,8 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .meta-label {
@@ -164,12 +198,15 @@
   letter-spacing: 0.06em;
   color: var(--med-primary);
   font-weight: 700;
+  word-break: break-word;
 }
 
 .meta-value {
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--med-text-primary);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 
   &.status-completed {
     color: var(--med-success);
@@ -179,6 +216,9 @@
 .section {
   border-top: 1px solid var(--med-border-subtle);
   padding-top: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .section-title {
@@ -189,6 +229,7 @@
   letter-spacing: 0.06em;
   color: var(--med-primary);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  word-break: break-word;
 
   .prefix {
     opacity: 0.7;
@@ -203,9 +244,15 @@
   font-size: 0.8125rem;
   line-height: 1.55;
   color: var(--med-text-secondary);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 
   li {
     margin-bottom: 8px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
 
     &:last-child {
       margin-bottom: 0;
@@ -217,6 +264,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .tech-chip {
@@ -229,12 +279,16 @@
   font-weight: 600;
   color: var(--med-text-primary);
   letter-spacing: 0.02em;
+  word-break: break-word;
 }
 
 .shortcuts-grid {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .shortcut-row {
@@ -243,6 +297,17 @@
   gap: 10px;
   font-size: 0.75rem;
   color: var(--med-text-secondary);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.shortcut-desc {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .key {
@@ -257,5 +322,5 @@
   color: var(--med-text-primary);
   min-width: 60px;
   text-align: center;
+  flex-shrink: 0;
 }
-

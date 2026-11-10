@@ -107,6 +107,12 @@ test.describe('MedFlow — Automated WCAG Accessibility Audits', () => {
     await page.getByRole('button', { name: 'About MedFlow Application' }).click();
     await page.locator('.app-info-dialog[open]').waitFor();
 
+    const hasHorizontalOverflow = await page.evaluate(() => {
+      const el = document.querySelector('.drawer-container');
+      return el ? el.scrollWidth > el.clientWidth : false;
+    });
+    expect(hasHorizontalOverflow).toBe(false);
+
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])
       .disableRules(['color-contrast'])
