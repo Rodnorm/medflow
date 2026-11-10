@@ -105,6 +105,20 @@ test.describe('MedFlow — Mobile Experience & Responsive Navigation', () => {
     }
   });
 
+  test('overview recent procedures table fits within card without internal horizontal overflow on mobile', async ({
+    page,
+  }) => {
+    await page.goto('/overview');
+    await page.waitForSelector('.recent-table');
+
+    const isInternalScrollable = await page.evaluate(() => {
+      const container = document.querySelector('.recent-card-content');
+      return container ? container.scrollWidth > container.clientWidth : false;
+    });
+
+    expect(isInternalScrollable).toBe(false);
+  });
+
   test('mobile navigation drawer passes axe-core accessibility audit', async ({ page }) => {
     await page.goto('/overview');
     await page.getByRole('button', { name: 'Open navigation menu' }).click();
@@ -118,4 +132,3 @@ test.describe('MedFlow — Mobile Experience & Responsive Navigation', () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 });
-
